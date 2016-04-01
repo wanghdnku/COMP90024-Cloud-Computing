@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import re
 import sys
 from mpi4py import MPI
@@ -9,7 +12,7 @@ query = 'melbourne'
 if len(sys.argv) >= 2 and sys.argv[1]:
     query = sys.argv[1]
 
-path = '/Users/hayden/Desktop/miniTwitter.csv'
+path = 'miniTwitter.csv'
 
 # 初始化MPI变量
 comm = MPI.COMM_WORLD
