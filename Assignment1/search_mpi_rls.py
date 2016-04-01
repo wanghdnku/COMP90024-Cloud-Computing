@@ -8,17 +8,7 @@ from mpi4py import MPI
 from datetime import datetime
 from collections import Counter
 
-
-def divide_file(file, piece_size=1024 * 1024 * 512):
-    # Divide file piece by piece. Each piece for 500M.
-    while True:
-        file_piece = file.read(piece_size)
-        if not file_piece:
-            break
-        yield file_piece
-
-
-# Record the beginning time.
+# Record the begining time.
 beginning = datetime.now().timestamp()
 
 # Set the query word, if users input words from console, then replace it.
@@ -33,20 +23,14 @@ rank = comm.Get_rank()
 mode = MPI.MODE_RDONLY
 
 # Set the path of twitter file, then open it.
-path = 'miniTwitter.csv'
-twitter_file = open(path, 'r', encoding='utf-8')
-divided_twitter = divide_file(twitter_file)
+path = 'twitter.csv'
+with open(path, 'r', encoding='utf-8') as twitter_file:
 
-sum_query = Counter()
-sum_users = Counter()
-sum_topic = Counter()
-
-for block in divide_file(twitter_file):
     # Do different tasks in different rank.
     if rank == 0:
         # Read twitter file as a list of twitters, each element of this list is a
         # twitter. The header of twitter file is also been moved.
-        twitter_list = block.split('\n')
+        twitter_list = twitter_file.readlines()
         del twitter_list[0]
         # Create a now twitter_chunks which is a list of list.
         twitter_chunks = [[] for _ in range(size)]
@@ -56,49 +40,47 @@ for block in divide_file(twitter_file):
         # Do nothing is the rank isn't the root
         twitter_list = None
         twitter_chunks = None
-    # Each rank get their data from scatter.
+    # Each rank get their data from satter.
     local_chunk = comm.scatter(twitter_chunks, root=0)
 
-    # Create 3 counters to record statistical data.
-    query_per_chunk = Counter()
-    users_per_chunk = Counter()
-    topic_per_chunk = Counter()
+# Create 3 counters to record statistical data.
+query_per_chunk = Counter()
+users_per_chunk = Counter()
+topic_per_chunk = Counter()
 
-    # Search each line of chunk, update counters.
-    for item in local_chunk:
-        queryPerItem = re.findall(query, item.lower())
-        usersPerItem = re.findall(r'(?<=@)\w+', item.lower())
-        topicPerItem = re.findall(r'(?<=#)\w+', item.lower())
-        query_per_chunk.update(queryPerItem)
-        users_per_chunk.update(usersPerItem)
-        topic_per_chunk.update(topicPerItem)
+# Search each line of chunk, update counters.
+for item in local_chunk:
+    queryPerItem = re.findall(query, item.lower())
+    usersPerItem = re.findall(r'(?<=@)\w+', item.lower())
+    topicPerItem = re.findall(r'(?<=#)\w+', item.lower())
+    query_per_chunk.update(queryPerItem)
+    users_per_chunk.update(usersPerItem)
+    topic_per_chunk.update(topicPerItem)
 
-    # Gathering data as a tuple.
-    local_data = (query_per_chunk, users_per_chunk, topic_per_chunk)
-    combine_data = comm.gather(local_data, root=0)
+# Gathering data as a tuple.
+local_data = (query_per_chunk, users_per_chunk, topic_per_chunk)
+combine_data = comm.gather(local_data,root=0)
 
-    # Add counters from each chunk together at the root.
-    if rank == 0:
-        query_count = Counter()
-        users_count = Counter()
-        topic_count = Counter()
-        for data_tuple in combine_data:
-            query_count.update(data_tuple[0])
-            users_count.update(data_tuple[1])
-            topic_count.update(data_tuple[2])
-        sum_query.update(query_count)
-        sum_users.update(users_count)
-        sum_topic.update(topic_count)
+# Add counters from each chunk together at the root.
+if rank == 0:
+    query_count = Counter()
+    users_count = Counter()
+    topic_count = Counter()
+    for data_tuple in combine_data:
+        query_count.update(data_tuple[0])
+        users_count.update(data_tuple[1])
+        topic_count.update(data_tuple[2])
 
 # Record the end time.
 ending = datetime.now().timestamp()
+
 
 # Printing the data and formatting.
 if rank == 0:
     # Printing the result.
     dotFormat = 0
     print('\n================= Word Frequency ==================')
-    for (query, times) in sum_query.most_common():
+    for (query, times) in query_count.most_common():
         print(' ' + query + ' ', end='')
         dotFormat = 41 - len(str(times)) - len(query)
         while dotFormat > 0:
@@ -107,7 +89,7 @@ if rank == 0:
         print(' %s times' % times)
 
     print('\n================== Top10 Users ====================')
-    for (names, times) in sum_users.most_common(10):
+    for (names, times) in users_count.most_common(10):
         print(' @' + names + ' ', end='')
         dotFormat = 40 - len(str(times)) - len(names)
         while dotFormat > 0:
@@ -116,7 +98,7 @@ if rank == 0:
         print(' %s times' % times)
 
     print('\n================== Top10 Topics ===================')
-    for (topic, times) in sum_topic.most_common(10):
+    for (topic, times) in topic_count.most_common(10):
         print(' #' + topic + ' ', end='')
         dotFormat = 40 - len(str(times)) - len(topic)
         while dotFormat > 0:
