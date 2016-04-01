@@ -11,11 +11,11 @@ query_count = Counter()
 users_count = Counter()
 topic_count = Counter()
 
-path = 'miniTwitter.csv'
+path = '/Users/hayden/Desktop/miniTwitter.csv'
 
 beginning = datetime.now().timestamp()
 
-twitters = open(path, 'r')
+twitters = open(path, 'r', encoding='utf-8')
 
 single_twitter = twitters.readlines()
 del single_twitter[0]

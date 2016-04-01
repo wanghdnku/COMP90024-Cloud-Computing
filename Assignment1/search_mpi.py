@@ -23,8 +23,8 @@ rank = comm.Get_rank()
 mode = MPI.MODE_RDONLY
 
 # Set the path of twitter file, then open it.
-path = 'miniTwitter.csv'
-twitter_file = open(path, 'rb')
+path = 'twitter.csv'
+twitter_file = open(path, 'r', encoding='utf-8')
 
 # Do different tasks in different rank.
 if rank == 0:
@@ -77,10 +77,6 @@ ending = datetime.now().timestamp()
 
 # Printing the data and formatting.
 if rank == 0:
-    # Calculating the duration time.
-    duration = str("%.2f" % (ending - beginning))
-    print('\n\nDuration: %s s' % duration)
-
     # Printing the result.
     dotFormat = 0
     print('\n================= Word Frequency ==================')
@@ -109,3 +105,7 @@ if rank == 0:
             print('.', end='')
             dotFormat -= 1
         print(' %s times' % times)
+
+    # Calculating the duration time.
+    duration = str("%.2f" % (ending - beginning))
+    print('\nDuration: %s s' % duration)
