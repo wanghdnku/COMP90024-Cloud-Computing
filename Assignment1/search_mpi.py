@@ -108,4 +108,4 @@ if rank == 0:
 
     # Calculating the duration time.
     duration = str("%.2f" % (ending - beginning))
-    print('\nDuration: %s s' % duration)
+    print('\nDuration of work: %s s' % duration)
