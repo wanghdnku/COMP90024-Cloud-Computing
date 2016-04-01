@@ -32,16 +32,16 @@ if rank == 0:
     # twitter. The header of twitter file is also been moved.
     twitter_list = twitter_file.readlines()
     del twitter_list[0]
-    # Chunk the list into (size) pieces.
+    # Create a now twitter_chunks which is a list of list.
     twitter_chunks = [[] for _ in range(size)]
     for i, chunk in enumerate(twitter_list):
         twitter_chunks[i % size].append(chunk)
 else:
     # Do nothing is the rank isn't the root
-    data = None
-    chunks = None
+    twitter_list = None
+    twitter_chunks = None
 # Each rank get their data from satter.
-data = comm.scatter(twitter_chunks, root=0)
+local_chunk = comm.scatter(twitter_chunks, root=0)
 
 # Create 3 counters to record statistical data.
 query_per_chunk = Counter()
@@ -49,7 +49,7 @@ users_per_chunk = Counter()
 topic_per_chunk = Counter()
 
 # Search each line of chunk, update counters.
-for item in twitter_chunks:
+for item in local_chunk:
     queryPerItem = re.findall(query, item.lower())
     usersPerItem = re.findall(r'(?<=@)\w+', item.lower())
     topicPerItem = re.findall(r'(?<=#)\w+', item.lower())
