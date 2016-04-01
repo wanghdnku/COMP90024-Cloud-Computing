@@ -34,61 +34,61 @@ mode = MPI.MODE_RDONLY
 
 # Set the path of twitter file, then open it.
 path = 'miniTwitter.csv'
-twitter_file = open(path, 'r', encoding='utf-8')
-divided_twitter = divide_file(twitter_file)
+# Open the file.
+with open(path, 'r', encoding='utf-8') as twitter_file:
 
-sum_query = Counter()
-sum_users = Counter()
-sum_topic = Counter()
-
-for block in divide_file(twitter_file):
-    # Do different tasks in different rank.
+    # Only generate counters in the root.
     if rank == 0:
-        # Read twitter file as a list of twitters, each element of this list is a
-        # twitter. The header of twitter file is also been moved.
-        twitter_list = block.split('\n')
-        del twitter_list[0]
-        # Create a now twitter_chunks which is a list of list.
-        twitter_chunks = [[] for _ in range(size)]
-        for i, chunk in enumerate(twitter_list):
-            twitter_chunks[i % size].append(chunk)
-    else:
-        # Do nothing is the rank isn't the root
-        twitter_list = None
-        twitter_chunks = None
-    # Each rank get their data from scatter.
-    local_chunk = comm.scatter(twitter_chunks, root=0)
+        sum_query = Counter()
+        sum_users = Counter()
+        sum_topic = Counter()
 
-    # Create 3 counters to record statistical data.
-    query_per_chunk = Counter()
-    users_per_chunk = Counter()
-    topic_per_chunk = Counter()
+    # Divide large file into blocks
+    for block in divide_file(twitter_file):
+        # Do different tasks in different rank.
+        if rank == 0:
+            # Read twitter file as a list of twitters, each element of this list
+            # is a twitter. The header of twitter file is also been moved.
+            twitter_list = block.split('\n')
+            # del twitter_list[0]
+            # Create a now twitter_chunks which is a list of list.
+            twitter_chunks = [[] for _ in range(size)]
+            for i, chunk in enumerate(twitter_list):
+                twitter_chunks[i % size].append(chunk)
+        else:
+            # Do nothing is the rank isn't the root
+            twitter_list = None
+            twitter_chunks = None
+        # Each rank get their data from scatter.
+        local_chunk = comm.scatter(twitter_chunks, root=0)
 
-    # Search each line of chunk, update counters.
-    for item in local_chunk:
-        queryPerItem = re.findall(query, item.lower())
-        usersPerItem = re.findall(r'(?<=@)\w+', item.lower())
-        topicPerItem = re.findall(r'(?<=#)\w+', item.lower())
-        query_per_chunk.update(queryPerItem)
-        users_per_chunk.update(usersPerItem)
-        topic_per_chunk.update(topicPerItem)
+        # Create 3 counters to record statistical data.
+        query_per_chunk = Counter()
+        users_per_chunk = Counter()
+        topic_per_chunk = Counter()
 
-    # Gathering data as a tuple.
-    local_data = (query_per_chunk, users_per_chunk, topic_per_chunk)
-    combine_data = comm.gather(local_data, root=0)
+        # Search each line of chunk, update counters.
+        for item in local_chunk:
+            queryPerItem = re.findall(query, item.lower())
+            usersPerItem = re.findall(r'(?<=@)\w+', item.lower())
+            topicPerItem = re.findall(r'(?<=#)\w+', item.lower())
+            query_per_chunk.update(queryPerItem)
+            users_per_chunk.update(usersPerItem)
+            topic_per_chunk.update(topicPerItem)
 
-    # Add counters from each chunk together at the root.
-    if rank == 0:
-        query_count = Counter()
-        users_count = Counter()
-        topic_count = Counter()
-        for data_tuple in combine_data:
-            query_count.update(data_tuple[0])
-            users_count.update(data_tuple[1])
-            topic_count.update(data_tuple[2])
-        sum_query.update(query_count)
-        sum_users.update(users_count)
-        sum_topic.update(topic_count)
+        # Gathering data as a tuple.
+        local_data = (query_per_chunk, users_per_chunk, topic_per_chunk)
+        combine_data = comm.gather(local_data, root=0)
+
+        # Add counters from each chunk together at the root.
+        if rank == 0:
+            # Add data to global varibables
+            for data_tuple in combine_data:
+                sum_query.update(data_tuple[0])
+                sum_users.update(data_tuple[1])
+                sum_topic.update(data_tuple[2])
+
+######### Close the File
 
 # Record the end time.
 ending = datetime.now().timestamp()
