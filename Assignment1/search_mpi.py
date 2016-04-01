@@ -24,7 +24,7 @@ mode = MPI.MODE_RDONLY
 
 # Set the path of twitter file, then open it.
 path = 'miniTwitter.csv'
-twitter_file = open(path, 'r')
+twitter_file = open(path, 'rb')
 
 # Do different tasks in different rank.
 if rank == 0:
