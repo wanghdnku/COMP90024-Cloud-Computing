@@ -1,97 +1,87 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# import some module used in this program.
 import re
 import sys
 from mpi4py import MPI
 from datetime import datetime
 from collections import Counter
 
-# 获取查询单词
+# Record the begining time.
+beginning = datetime.now().timestamp()
+
+# Set the query word, if users input words from console, then replace it.
 query = 'melbourne'
 if len(sys.argv) >= 2 and sys.argv[1]:
     query = sys.argv[1]
 
-path = 'miniTwitter.csv'
-
-# 初始化MPI变量
+# Initialize MPI variables.
 comm = MPI.COMM_WORLD
 size = comm.Get_size()
 rank = comm.Get_rank()
 mode = MPI.MODE_RDONLY
 
-# 开始时间
-beginning = datetime.now().timestamp()
+# Set the path of twitter file, then open it.
+path = 'miniTwitter.csv'
+twitter_file = open(path, 'r')
 
-# 读取文件
-twitters = open(path, 'r')
-
-# 按结点不同分别处理数据
+# Do different tasks in different rank.
 if rank == 0:
-    # 当结点为跟结点,把文件读取成为数组,并删除文件头
-    single_twitter = twitters.readlines()
-    del single_twitter[0]
-    # 将twitter列表按结点数拆分
+    # Read twitter file as a list of twitters, each element of this list is a
+    # twitter. The header of twitter file is also been moved.
+    twitter_list = twitter_file.readlines()
+    del twitter_list[0]
+    # Chunk the list into (size) pieces.
     twitter_chunks = [[] for _ in range(size)]
-    for i, chunk in enumerate(single_twitter):
+    for i, chunk in enumerate(twitter_list):
         twitter_chunks[i % size].append(chunk)
 else:
-    # 当结点不是根结点
+    # Do nothing is the rank isn't the root
     data = None
     chunks = None
-# 将分割好的twitter列表分发给各个结点
+# Each rank get their data from satter.
 data = comm.scatter(twitter_chunks, root=0)
 
-# 每个结点,包括根结点,都要处理的数据
-# 用来存储每个结点统计的信息
-query_per_process = Counter()
-users_per_process = Counter()
-topic_per_process = Counter()
+# Create 3 counters to record statistical data.
+query_per_chunk = Counter()
+users_per_chunk = Counter()
+topic_per_chunk = Counter()
 
-# 逐行搜索,并新计数器
+# Search each line of chunk, update counters.
 for item in twitter_chunks:
     queryPerItem = re.findall(query, item.lower())
     usersPerItem = re.findall(r'(?<=@)\w+', item.lower())
     topicPerItem = re.findall(r'(?<=#)\w+', item.lower())
-    query_per_process.update(queryPerItem)
-    users_per_process.update(usersPerItem)
-    topic_per_process.update(topicPerItem)
+    query_per_chunk.update(queryPerItem)
+    users_per_chunk.update(usersPerItem)
+    topic_per_chunk.update(topicPerItem)
 
-# Gathering Data
-local_data = (query_per_process, users_per_process, topic_per_process)
+# Gathering data as a tuple.
+local_data = (query_per_chunk, users_per_chunk, topic_per_chunk)
 combine_data = comm.gather(local_data,root=0)
 
+# Add counters from each chunk together at the root.
 if rank == 0:
-     # 初始化计数器
-     query_count = Counter()
-     users_count = Counter()
-     topic_count = Counter()
-     for data_tuple in combine_data:
-         query_count.update(data_tuple[0])
-         users_count.update(data_tuple[1])
-         topic_count.update(data_tuple[2])
+    query_count = Counter()
+    users_count = Counter()
+    topic_count = Counter()
+    for data_tuple in combine_data:
+        query_count.update(data_tuple[0])
+        users_count.update(data_tuple[1])
+        topic_count.update(data_tuple[2])
 
-
-
-
-
-
-
-# print(query_count.most_common(), end='\n')
-# print(users_count.most_common(10), end='\n')
-# print(topic_count.most_common(10), end='\n')
-
-# 结束时间
+# Record the end time.
 ending = datetime.now().timestamp()
 
 
-# 只在根结点打印信息
+# Printing the data and formatting.
 if rank == 0:
-    # 计算所用时间
+    # Calculating the duration time.
     duration = str("%.2f" % (ending - beginning))
     print('\n\nDuration: %s s' % duration)
 
-    # 打印结果
+    # Printing the result.
     dotFormat = 0
     print('\n================= Word Frequency ==================')
     for (query, times) in query_count.most_common():
