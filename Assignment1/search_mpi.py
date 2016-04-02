@@ -9,13 +9,13 @@ from datetime import datetime
 from collections import Counter
 
 
-def divide_file(file, piece_size=1024 * 1024 * 512):
-    # Divide file piece by piece. Each piece for 500M.
+def divide_file(file, piece_size = 1024 * 1024 * 1):
+    # Divide file piece by piece. Each piece for default 1M.
     while True:
-        file_piece = file.read(piece_size)
-        if not file_piece:
+        file_lines = file.readlines(piece_size)
+        if not file_lines:
             break
-        yield file_piece
+        yield file_lines
 
 
 # Record the beginning time.
@@ -33,7 +33,7 @@ rank = comm.Get_rank()
 mode = MPI.MODE_RDONLY
 
 # Set the path of twitter file, then open it.
-path = 'miniTwitter.csv'
+path = 'Twitter.csv'
 # Open the file.
 with open(path, 'r', encoding='utf-8') as twitter_file:
 
@@ -44,12 +44,12 @@ with open(path, 'r', encoding='utf-8') as twitter_file:
         sum_topic = Counter()
 
     # Divide large file into blocks
-    for block in divide_file(twitter_file):
+    for twitter_list in divide_file(twitter_file):
         # Do different tasks in different rank.
         if rank == 0:
             # Read twitter file as a list of twitters, each element of this list
             # is a twitter. The header of twitter file is also been moved.
-            twitter_list = block.split('\n')
+            # twitter_list = block
             # del twitter_list[0]
             # Create a now twitter_chunks which is a list of list.
             twitter_chunks = [[] for _ in range(size)]
