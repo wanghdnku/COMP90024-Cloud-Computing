@@ -12,12 +12,13 @@ https://computing.llnl.gov/linux/slurm/cpu_management.html
 ###**`--begin=<time>`**
 >Defer initiation of this job until the specified time. It accepts times of the form HH:MM:SS to run a job at a specific time of day (seconds are optional). (If that time is already past, the next day is assumed.) You may also specify midnight, noon, or teatime (4pm) and you can have a time-of-day suffixed with AM or PM for running in the morning or the evening. You can also say what day the job will be run, by specifying a date of the form MMDDYY or MM/DD/YY YYYY-MM-DD. Combine date and time using the following format YYYY-MM-DD[THH:MM[:SS]]. You can also give times like now + count time-units, where the time-units can be seconds (default), minutes, hours, days, or weeks and you can tell SLURM to run the job today with the keyword today and to run the job tomorrow with the keyword tomorrow. The value may be changed after job submission using the scontrol command. For example:
 
-```shell script
+```
    --begin=16:00
    --begin=now+1hour
    --begin=now+60           (seconds by default)
    --begin=2010-01-20T12:34:00
 ```
+
 >Notes on date/time specifications: 
  - Although the 'seconds' field of the HH:MM:SS time specification is allowed by the code, note that the poll time of the SLURM scheduler is not precise enough to guarantee dispatch of the job on the exact second. The job will be eligible to start on the next poll following the specified time. The exact poll interval depends on the SLURM scheduler (e.g., 60 seconds with the default sched/builtin). 
  - If no time (HH:MM:SS) is specified, the default is (00:00:00). 
