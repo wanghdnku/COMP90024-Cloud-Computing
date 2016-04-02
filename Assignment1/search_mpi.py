@@ -10,7 +10,7 @@ from collections import Counter
 
 
 def divide_file(file, piece_size = 1024 * 1024 * 1):
-    # Divide file piece by piece. Each piece for default 1M.
+    # Divide file by lines. Each piece is default 1M.
     while True:
         file_lines = file.readlines(piece_size)
         if not file_lines:
@@ -126,4 +126,4 @@ if rank == 0:
 
     # Calculating the duration time.
     duration = str("%.2f" % (ending - beginning))
-    print('\nDuration of work: %s s' % duration)
+    print('\n[ Duration of work: %s s ]' % duration)
