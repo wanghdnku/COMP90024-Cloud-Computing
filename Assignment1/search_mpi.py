@@ -9,8 +9,8 @@ from datetime import datetime
 from collections import Counter
 
 
-def divide_file(file, piece_size = 1024 * 1024 * 1):
-    # Divide file by lines. Each piece is default 1M.
+def divide_file(file, piece_size = 1024 * 1024 * 50):
+    # Divide file by lines. Each piece is default size.
     while True:
         file_lines = file.readlines(piece_size)
         if not file_lines:
@@ -33,7 +33,7 @@ rank = comm.Get_rank()
 mode = MPI.MODE_RDONLY
 
 # Set the path of twitter file, then open it.
-path = 'Twitter.csv'
+path = 'twitter.csv'
 # Open the file.
 with open(path, 'r', encoding='utf-8') as twitter_file:
 
