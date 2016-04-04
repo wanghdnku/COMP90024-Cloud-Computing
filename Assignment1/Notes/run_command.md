@@ -42,7 +42,7 @@ https://computing.llnl.gov/linux/slurm/cpu_management.html
 
 
 ###**`--ntasks-per-core=<ntasks>`**
->Request the maximum ntasks be invoked on each core. Meant to be used with the --ntasks option. Related to --ntasks-per-node except at the core level instead of the node level. Masks will automatically be generated to bind the tasks to specific core unless --cpu_bind=none is specified. NOTE: This option is not supported unless SelectTypeParameters=CR_Core or SelectTypeParameters=CR_Core_Memory is configured.
+>Request the maximum ntasks be invoked on each core. Meant to be used with the --ntasks option. Related to --ntasks-per-node except at the core level instead of the node level. Masks will automatically be generated to bind the tasks to specific core unless --cpu\_bind=none is specified. NOTE: This option is not supported unless SelectTypeParameters=CR\_Core or SelectTypeParameters=CR\_Core\_Memory is configured.
 
 
 ###**`--ntasks-per-node=<ntasks>`**
