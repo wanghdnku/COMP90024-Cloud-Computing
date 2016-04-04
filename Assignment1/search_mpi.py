@@ -52,7 +52,7 @@ size = comm.Get_size()
 rank = comm.Get_rank()
 
 # Set the path of twitter file, then open it.
-path = 'twitter.csv'
+path = 'oneGTwitter.csv'
 # Open the file.
 with open(path, 'r', encoding='utf-8') as twitter_file:
 
@@ -62,7 +62,7 @@ with open(path, 'r', encoding='utf-8') as twitter_file:
         sum_users = Counter()
         sum_topic = Counter()
 
-    parallel_time = datetime.now().timestamp()
+    parallel_time = 0
 
     # Divide large file into blocks
     for twitter_list in divide_file(twitter_file):
