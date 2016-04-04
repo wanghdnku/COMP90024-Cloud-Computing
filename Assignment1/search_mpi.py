@@ -50,10 +50,9 @@ if len(sys.argv) >= 2 and sys.argv[1]:
 comm = MPI.COMM_WORLD
 size = comm.Get_size()
 rank = comm.Get_rank()
-mode = MPI.MODE_RDONLY
 
 # Set the path of twitter file, then open it.
-path = '1GTwitter.csv'
+path = 'twitter.csv'
 # Open the file.
 with open(path, 'r', encoding='utf-8') as twitter_file:
 
@@ -63,12 +62,7 @@ with open(path, 'r', encoding='utf-8') as twitter_file:
         sum_users = Counter()
         sum_topic = Counter()
 
-    # Timer count, this is a flag that guarantee the parallel time is only
-    # recorded once.
-    timer_count_start = True
-    timer_count_end = True
-    parallel_start_time = datetime.now().timestamp()
-    parallel_end_time = datetime.now().timestamp()
+    parallel_time = datetime.now().timestamp()
 
     # Divide large file into blocks
     for twitter_list in divide_file(twitter_file):
@@ -86,9 +80,7 @@ with open(path, 'r', encoding='utf-8') as twitter_file:
         local_chunk = comm.scatter(twitter_chunks, root=0)
 
         # Start record the time that program start running in parallel
-        if timer_count_start:
-            parallel_start_time = datetime.now().timestamp()
-            timer_count_start = False
+        parallel_start_time = datetime.now().timestamp()
 
         # Create 3 counters to record statistical data.
         query_per_chunk = Counter()
@@ -109,9 +101,9 @@ with open(path, 'r', encoding='utf-8') as twitter_file:
             topic_per_chunk.update(topicPerItem)
 
         # Start record the end time that program running in parallel
-        if timer_count_end:
-            parallel_end_time = datetime.now().timestamp()
-            timer_count_end = False
+        parallel_end_time = datetime.now().timestamp()
+
+        parallel_time += (parallel_end_time - parallel_start_time)
 
         # Gathering data as a tuple.
         local_data = (query_per_chunk, users_per_chunk, topic_per_chunk)
@@ -167,6 +159,6 @@ if rank == 0:
     # Calculating the time of wall.
     duration_time = str("%.2f" % (program_end_time - program_start_time))
     # Calculating the time of program running in the parallel process.
-    parallel_time = str("%.2f" % (parallel_end_time - parallel_start_time))
+    parallel_time = str("%.2f" % (parallel_time))
     print('\n[ Time of wall     : %s s ]' % duration_time)
     print('\n[ Time of parallel : %s s ]' % parallel_time)
