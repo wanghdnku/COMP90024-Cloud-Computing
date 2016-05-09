@@ -11,8 +11,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <!--[if lt IE 9]--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><!--[endif]-->
-  <meta name="description" content="">
-  <meta name="author" content="ChinaZ">
+  <meta name="description" content="This is the front-end web page for COMP90024 assignemnt2.">
+  <meta name="author" content="Haidong Wang">
   <!--[if lt IE 9]--><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><!--[endif]-->
   <!--[if lte IE 8]--><script type="text/javascript" src="http://explorercanvas.googlecode.com/svn/trunk/excanvas.js"></script><!--[endif]-->
   <link rel="stylesheet" type="text/css" href="external/bootstrap.min.css" />
@@ -75,10 +75,15 @@
       <div class="banner-container"> <img src="images/sunset.gif" alt="banner" />
         <div class="container banner-content">
           <div class="hero-text animated fadeInDownBig">
-            <div style="background: rgba(0, 0, 0, 0.4); border-radius: 25px; padding-top: 10px; padding-bottom: 20px">
+            <div style="background: rgba(0, 0, 0, 0.5); border-radius: 25px; padding-top: 10px; padding-bottom: 20px">
             <h1 class="responsive-headline">Australian City Analytics<br/>
               Template  for your Business or Corporate</h1>
-             <a href="#basics" class="arrow-link"> <i class="fa fa-chevron-down"></i> </a>
+              <a href="#drawmap" class="btn btn-danger btn-lg scroll-link" style="width: 150px;">Get Started</a>
+              <a href="#team" class="btn btn-danger btn-lg scroll-link" style="width: 150px;">Instruction</a>
+              <br/>
+              <a href="#basics" class="arrow-link"> <i class="fa fa-chevron-down"></i> </a>
+
+
             </div>
             <!--<p>Awesome theme for your Business or Corporate site to showcase <br/>
               your product and service.</p>-->
@@ -161,7 +166,7 @@
                 '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                 'Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 */
-        id: 'mapbox.dark'
+        id: 'mapbox.light'
         //id: 'mapbox.emerald'
       }).addTo(map);
 
@@ -271,31 +276,47 @@
 
   <section id="services" class="page-section colord">
       <div class="container">
+        <h3 style="text-align: center; padding-bottom: 15px">Front-End Web Application</h3>
         <div class="row">
           <!-- item -->
-          <div class="col-md-3 text-center"> <i class="circle"><img src="images/clock.png" alt="" /></i>
-            <h3>Responsive <span class="id-color">Design</span></h3>
+          <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+            <i class="circle"><img src="images/technique/html5.png" alt="" /></i>
+            <h3>HTML5</h3>
+            <p>Nullam ac rhoncus sapien, non gravida purus.</p>
+          </div>
+          <!-- end: -->
+
+          <!-- item -->
+          <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+            <i class="circle"> <img src="images/technique/css3.png" alt="" /></i>
+            <h3>CSS3</h3>
             <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet congue.</p>
           </div>
           <!-- end: -->
 
           <!-- item -->
-          <div class="col-md-3 text-center"><i class="circle"> <img src="images/eye.png" alt="" /></i>
-            <h3>HTML5/CSS3 <span class="id-color">Dev</span></h3>
-            <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet congue.</p>
-          </div>
-          <!-- end: -->
-
-          <!-- item -->
-          <div class="col-md-3 text-center"><i class="circle"> <img src="images/cart.png" alt="" /></i>
-            <h3>JavaScript <span class="id-color">jQuery</span></h3>
+          <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+            <i class="circle"> <img src="images/technique/javascript.png" alt="" /></i>
+            <h3>JavaScript</h3>
             <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer ultricies sed elit impe.</p>
           </div>
           <!-- end: -->
 
-          <!-- item -->
-          <div class="col-md-3 text-center"><i class="circle"> <img src="images/heart.png" alt="" /></i>
-            <h3>Web <span class="id-color">Designing</span></h3>
+          <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+            <i class="circle"> <img src="images/technique/bootstrap.png" alt="" /></i>
+            <h3>Bootstrap</h3>
+            <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>
+          </div>
+
+          <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+            <i class="circle"> <img src="images/technique/jquery.png" alt="" /></i>
+            <h3>jQuery</h3>
+            <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>
+          </div>
+
+          <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+            <i class="circle"> <img src="images/technique/ajax.png" alt="" /></i>
+            <h3>AJAX</h3>
             <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>
           </div>
           <!-- end:-->
@@ -454,19 +475,7 @@
           <p>At lorem Ipsum available, but the majority have suffered alteration in some form by injected humour.</p>
         </div>
         <div class="row flat">
-          <div class="col-lg-3 col-md-3 col-xs-6">
-            <ul class="plan plan1">
-              <li class="plan-name">Basic </li>
-              <li class="plan-price"> <strong>$29</strong> / month </li>
-              <li> <strong>5GB</strong> Storage </li>
-              <li> <strong>1GB</strong> RAM </li>
-              <li> <strong>400GB</strong> Bandwidth </li>
-              <li> <strong>10</strong> Email Address </li>
-              <li> <strong>Forum</strong> Support </li>
-              <li class="plan-action"> <a href="#" class="btn btn-danger btn-lg">Signup</a> </li>
-            </ul>
-          </div>
-          <div class="col-lg-3 col-md-3 col-xs-6">
+          <div class="col-lg-12 col-md-12 col-xs-12">
             <ul class="plan plan2 featured">
               <li class="plan-name">Standard </li>
               <li class="plan-price"> <strong>$39</strong> / month </li>
@@ -474,30 +483,6 @@
               <li> <strong>1GB</strong> RAM </li>
               <li> <strong>400GB</strong> Bandwidth </li>
               <li> <strong>10</strong> Email Address </li>
-              <li> <strong>Forum</strong> Support </li>
-              <li class="plan-action"> <a href="#" class="btn btn-danger btn-lg">Signup</a> </li>
-            </ul>
-          </div>
-          <div class="col-lg-3 col-md-3 col-xs-6">
-            <ul class="plan plan3">
-              <li class="plan-name">Advanced </li>
-              <li class="plan-price"> <strong>$199</strong> / month </li>
-              <li> <strong>50GB</strong> Storage </li>
-              <li> <strong>8GB</strong> RAM </li>
-              <li> <strong>1024GB</strong> Bandwidth </li>
-              <li> <strong>Unlimited</strong> Email Address </li>
-              <li> <strong>Forum</strong> Support </li>
-              <li class="plan-action"> <a href="#" class="btn btn-danger btn-lg">Signup</a> </li>
-            </ul>
-          </div>
-          <div class="col-lg-3 col-md-3 col-xs-6">
-            <ul class="plan plan4">
-              <li class="plan-name">Mighty </li>
-              <li class="plan-price"> <strong>$999</strong> / month </li>
-              <li> <strong>50GB</strong> Storage </li>
-              <li> <strong>8GB</strong> RAM </li>
-              <li> <strong>1024GB</strong> Bandwidth </li>
-              <li> <strong>Unlimited</strong> Email Address </li>
               <li> <strong>Forum</strong> Support </li>
               <li class="plan-action"> <a href="#" class="btn btn-danger btn-lg">Signup</a> </li>
             </ul>
@@ -741,7 +726,7 @@
     <script src="js/owl-carousel/owl.carousel.js"></script>
 
 
-    </body>
+</body>
 
 
 </html>
