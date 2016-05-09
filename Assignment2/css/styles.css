@@ -670,7 +670,8 @@ img, video, iframe, embed, object {
 }
 .team-socials {
 	position:absolute;
-	bottom:70px;
+	/*top: 43%;*/
+	bottom:115px;
 	left:0px;
 	right:0px;
 }
