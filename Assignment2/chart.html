@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script type="text/javascript">
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("barChartContainer",
+                    {
+                        title:{
+                            text: "Division of products Sold in Quarter."
+                        },
+                        axisY:{
+                            title: "percent"
+                        },
+                        animationEnabled: true,
+                        toolTip:{
+                            shared: true,
+                            content: "{name}: {y} - <strong>#percent%</strong>",
+                        },
+                        data:[
+                            {
+                                type: "stackedBar100",
+                                showInLegend: true,
+                                name: "April",
+                                dataPoints: [
+                                    {y: 600, label: "Water Filter" },
+                                    {y: 400, label: "Modern Chair" },
+                                    {y: 120, label: "VOIP Phone" },
+                                    {y: 250, label: "Microwave" },
+                                    {y: 120, label: "Water Filter" },
+                                    {y: 374, label: "Expresso Machine" },
+                                    {y: 350, label: "Lobby Chair" }
+                                ]
+                            },
+                            {
+                                type: "stackedBar100",
+                                showInLegend: true,
+                                name: "May",
+                                dataPoints: [
+                                    {y: 400, label: "Water Filter" },
+                                    {y: 500, label: "Modern Chair" },
+                                    {y: 220, label: "VOIP Phone" },
+                                    {y: 350, label: "Microwave" },
+                                    {y: 220, label: "Water Filter" },
+                                    {y: 474, label: "Expresso Machine" },
+                                    {y: 450, label: "Lobby Chair" }
+                                ]
+                            },
+                            {
+                                type: "stackedBar100",
+                                showInLegend: true,
+                                name: "June",
+                                dataPoints: [
+                                    {y: 300, label: "Water Filter" },
+                                    {y: 610, label: "Modern Chair" },
+                                    {y: 215, label: "VOIP Phone" },
+                                    {y: 221, label: "Microwave" },
+                                    {y: 75, label: "Water Filter" },
+                                    {y: 310, label: "Expresso Machine" },
+                                    {y: 340, label: "Lobby Chair" }
+                                ]
+                            }
+                        ]
+                    });
+            chart.render();
+
+            var mountainChart = new CanvasJS.Chart("mountainChartContainer",
+                    {
+                        title:{
+                            text: "Multi-Series Spline Area Chart"
+                        },
+                        animationEnabled: true,
+                        data: [
+                            {
+                                type: "splineArea",
+                                color: "rgba(54,158,173,.7)",
+
+                                dataPoints: [
+                                    {y: 1},
+                                    {y: 8},
+                                    {y: 18},
+                                    {y: 28},
+                                    {y: 31},
+                                    {y: 14},
+                                    {y: 26},
+                                    {y: 9},
+                                    {y: 18},
+                                    {y: 11},
+                                    {y: 7},
+                                    {y: 1}
+                                ]
+                            },
+                            {
+                                type: "splineArea",
+                                color: "rgba(194,70,66,.7)",
+                                dataPoints: [
+                                    {y: 14},
+                                    {y: 23},
+                                    {y: 21},
+                                    {y: 16},
+                                    {y: 12},
+                                    {y: 14},
+                                    {y: 18},
+                                    {y: 14},
+                                    {y: 11},
+                                    {y: 12},
+                                    {y: 17},
+                                    {y: 14}
+                                ]
+                            }
+
+                        ]
+                    });
+
+            mountainChart.render();
+
+            var pieChart = new CanvasJS.Chart("pieChartContainer",
+                    {
+                        title:{
+                            text: "US Mobile / Tablet OS Market Share, Dec 2012"
+                        },
+                        animationEnabled: true,
+                        theme: "theme2",
+                        data: [
+                            {
+                                type: "doughnut",
+                                indexLabelFontFamily: "Garamond",
+                                indexLabelFontSize: 20,
+                                startAngle:0,
+                                indexLabelFontColor: "dimgrey",
+                                indexLabelLineColor: "darkgrey",
+                                toolTipContent: "{y} %",
+
+                                dataPoints: [
+                                    {  y: 67.34, indexLabel: "iOS {y}%" },
+                                    {  y: 28.6, indexLabel: "Android {y}%" },
+                                    {  y: 1.78, indexLabel: "Kindle {y}%" },
+                                    {  y: 0.84,  indexLabel: "Symbian {y}%"},
+                                    {  y: 0.74, indexLabel: "BlackBerry {y}%" },
+                                    {  y: 2.06,  indexLabel: "Others {y}%"}
+
+                                ]
+                            }
+                        ]
+                    });
+
+            pieChart.render();
+
+
+
+        }
+    </script>
+
+
+
+
+    <script type="text/javascript" src="canvasjs.min.js"></script></head>
+<body>
+<div id="barChartContainer" style="height: 300px; width: 100%;"></div>
+
+<div id="mountainChartContainer" style="height: 300px; width: 100%;"></div>
+
+<div id="pieChartContainer" style="height: 300px; width: 100%;">
+
+</body>
+
+</html>
