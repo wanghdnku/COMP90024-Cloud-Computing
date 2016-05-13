@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Parsing JSON</title>
+  <script src="js/jquery-1.8.2.min.js"></script>
+</head>
+<body>
+<p id="xxx">xxxxx</p>
+<button>Send an HTTP GET request to a page and get the result back</button>
+
+<script>
+
+
+//  $.getJSON("https://geoserver.aurin.org.au/wfs?request=GetFeature&service=WFS&version=1.1.0&TypeName=grattan:Grattan_Job_Access2011&MaxFeatures=1000&outputFormat=json&CQL_FILTER=BBOX(the_geom,-37.843287468235644,144.88364340276473,-37.7613640945703,145.05084158388618)&PropertyName=SSC_NAME,PT60mins", function (data){
+//    $("#xxx").html("aaaaaa");
+//  });
+
+  $.getJSON("http://118.138.247.75:5000/aurin/rate_in_melbourne", function(data) {
+    $("#xxx").html("aaaaaa");
+  });
+
+
+//  $("#xxx").html("yyy");
+//    $.ajax({
+//      type : "GET",
+//      url : "https://geoserver.aurin.org.au/wfs?request=GetFeature&service=WFS&version=1.1.0&TypeName=grattan:Grattan_Job_Access2011&MaxFeatures=1000&outputFormat=json&CQL_FILTER=BBOX(the_geom,-37.843287468235644,144.88364340276473,-37.7613640945703,145.05084158388618)&PropertyName=SSC_NAME,PT60mins",
+//      dataType : "json",
+//      success : function (data) {
+//        alert("xxxx");
+//        $("#xxx").html("aaaaa");
+////        $.each(data.items, function (i, item) {
+////          $("<img class='para'/> ").attr("src", item.media.m).appendTo("#resText");
+////          if (i == 3) {
+////            return false;
+////          }
+////        });
+//      }
+//    });
+
+</script>
+
+
+</body>
+</html>
