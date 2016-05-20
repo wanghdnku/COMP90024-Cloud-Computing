@@ -7,735 +7,1198 @@
 <!--<![endif]-->
 
 <head>
-  <title>Home</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <!--[if lt IE 9]--><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><!--[endif]-->
-  <meta name="description" content="This is the front-end web page for COMP90024 assignemnt2.">
-  <meta name="author" content="Haidong Wang">
+  <title>Australian City Analytics</title>
+  <meta name="description" content="This is the web application for COMP90024 assignment2">
+  <meta name="author" content="Hayden Wang">
   <!--[if lt IE 9]--><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><!--[endif]-->
   <!--[if lte IE 8]--><script type="text/javascript" src="http://explorercanvas.googlecode.com/svn/trunk/excanvas.js"></script><!--[endif]-->
-  <link rel="stylesheet" type="text/css" href="external/bootstrap.min.css" />
+  <link rel="stylesheet" href="external/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="css/isotope.css" media="screen" />
-  <link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox.css" media="screen" />
-  <link rel="stylesheet" type="text/css" href="css/animate.css" media="screen" />
+  <link rel="stylesheet" href="js/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+  <link href="css/animate.css" rel="stylesheet" media="screen">
   <!-- Owl Carousel Assets -->
-  <link rel="stylesheet" type="text/css" href="js/owl-carousel/owl.carousel.css" />
-  <link rel="stylesheet" type="text/css" href="css/styles.css" />
+  <link href="js/owl-carousel/owl.carousel.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
   <!-- Font Awesome -->
-  <link rel="stylesheet" type="text/css" href="font/css/font-awesome.min.css" />
+  <link href="font/css/font-awesome.min.css" rel="stylesheet">
+
   <!-- Leaflet Map -->
-  <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-  <link rel="stylesheet" type="text/css" href="mystyle.css" />
-  <script src="js/jquery-1.8.2.min.js"></script>
+  <link rel="stylesheet" href="css/leaflet.css" type="text/css" />
+  <!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />-->
+  <link rel="stylesheet" href="mystyle.css" type="text/css" />
+  <link rel="stylesheet" href="css/jquery-ui.css" type="text/css">
+  <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">-->
+
+  <!--<script src="http://code.jquery.com/jquery-1.10.2.js"></script>-->
+  <script src="js/jquery-1.12.3.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <!--<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
+  <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+  <script type="text/javascript" src="js/employment_4cities.js"></script>
+
+
 
   <style type="text/css">
     .img-border { border: 3px solid rgb(4,128,58); }
     .duty { color: rgb(4,128,58); }
+    fieldset {
+      border: 0;
+      margin-left: 50px;
+    }
+    label {
+      display: block;
+      margin: 20px 0 0 0;
+    }
+    select {
+      width: 300px;
+    }
+    #confirmBtn {
+      margin-left: 50px;
+      margin-top: 30px;
+      width: 300px;
+    }
   </style>
+  <!--根据选项调整UI-->
+  <script>
+    $(function() {
+//      var circle = $( "#circle" );
+      var a1 = 50;
+      var a2 = 50;
+      var a3 = 50;
+      var a4 = 50;
+
+      var b1 = 70;
+      var b2 = 70;
+      var b3 = 70;
+      var b4 = 70;
+
+      var twitterData = "Twitter Data";
+      var aurinData = "AURIN Data";
+
+      $( "#twitter" ).selectmenu({
+        change: function( event, data ) {
+
+          if (data.item.value == "Positive") {
+            a1 = 6.72; a2 = 6.74; a3 = 6.28; a4 = 4.86;
+            twitterData = "Positive Attitude";
+          } else if (data.item.value == "Negative") {
+            a1 = 1.85; a2 = 1.89; a3 = 1.85; a4 = 1.54;
+            twitterData = "Negative Attitude";
+          } else if (data.item.value == "Politics") {
+            a1 = 35.41; a2 = 34.52; a3 = 38.36; a4 = 30.48;
+            twitterData = "Politics Relevance";
+          } else {
+            a1 = 64.59; a2 = 65.48; a3 = 61.64; a4 = 69.52;
+            twitterData = "Politics Irrelevance";
+          }
+
+
+        }
+      });
+
+      $( "#aurin" ).selectmenu({
+        change: function( event, data ) {
+          if (data.item.value == "Employment") {
+            b1 = 56.32; b2 = 62.63; b3 = 61.19; b4 = 61.29;
+            aurinData = "Employment Rate";
+          } else if (data.item.value == "Unemployment") {
+            b1 = 5.66; b2 = 5.68; b3 = 5.48; b4 = 5.87;
+            aurinData = "Unemployment Rate";
+          } else {
+            b1 = 39.75; b2 = 36.52; b3 = 37.77; b4 = 37.53;
+            aurinData = "Average Age";
+          }
+
+
+
+
+        }
+      });
+
+      $("#confirmBtn").click(function(){
+        var chart = new CanvasJS.Chart("chartContainer",
+            {
+              animationEnabled: true,
+              axisY: {
+                title: "percentage"
+              },
+              legend: {
+                verticalAlign: "bottom",
+                horizontalAlign: "center"
+              },
+              theme: "theme2",
+              data: [
+
+                {
+                  type: "column",
+                  showInLegend: true,
+                  legendMarkerColor: "rgba(61,106,176,1)",
+                  legendText: twitterData,
+                  dataPoints: [
+                    {y: a1, label: "Adelaide"},
+                    {y: a2,  label: "Brisbane" },
+                    {y: a3,  label: "Melbourne"},
+                    {y: a4,  label: "Sydney"}
+                  ]
+                },
+                {
+                  type: "line",
+                  showInLegend: true,
+                  lineThickness: 2,
+                  name: aurinData,
+                  markerType: "square",
+                  color: "#F08080",
+                  dataPoints: [
+                    { label: "Adelaide", y: b1 },
+                    { label: "Brisbane", y: b2 },
+                    { label: "Melbourne", y: b3 },
+                    { label: "Sydney", y: b4 }
+                  ]
+                }
+              ]
+            });
+
+        chart.render();
+      })
+    });
+  </script>
 
 </head>
 
 <body>
 
-<header class="header">
-  <div class="container">
-    <nav class="navbar navbar-inverse" role="navigation">
-      <div class="navbar-header">
-        <button type="button" id="nav-toggle" class="navbar-toggle" data-toggle="collapse" data-target="#main-nav">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a href="#" class="navbar-brand scroll-top logo  animated bounceInLeft"><b><i>COMP90024</i></b></a> </div>
-      <!--/.navbar-header-->
-      <div id="main-nav" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav" id="mainNav">
-          <li class="active" id="firstLink"><a href="#home" class="scroll-link">Home</a></li>
-          <li><a href="#drawmap" class="scroll-link">Maps</a></li>
-          <li><a href="#services" class="scroll-link">Services</a></li>
-          <li><a href="#aboutUs" class="scroll-link">About Us</a></li>
-          <li><a href="#work" class="scroll-link">Portfolio</a></li>
-          <li><a href="#plans" class="scroll-link">Plans</a></li>
-          <li><a href="#team" class="scroll-link">Team</a></li>
-          <li><a href="#contactUs" class="scroll-link">Contact Us</a></li>
-        </ul>
+<!-- This is the navigation bar -->
+  <header class="header">
+      <div class="container">
+        <nav class="navbar navbar-inverse" role="navigation">
+          <div class="navbar-header">
+            <button type="button" id="nav-toggle" class="navbar-toggle" data-toggle="collapse" data-target="#main-nav">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand scroll-top logo  animated bounceInLeft"><b><i>COMP90024</i></b></a>
+          </div>
+          <!--/.navbar-header-->
+          <div id="main-nav" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav" id="mainNav">
+              <li class="active" id="firstLink"><a href="#home" class="scroll-link">Home</a></li>
+              <li><a href="#analysis" class="scroll-link">Twitter Harvesting</a></li>
+              <li><a href="#aurin_analysis" class="scroll-link">AURIN Data</a></li>
+              <li><a href="#associative_analysis" class="scroll-link">Data Analysis</a></li>
+              <li><a href="#group" class="scroll-link">Group</a></li>
+              <li><a href="#techniques" class="scroll-link">Methodology</a></li>
+            </ul>
+          </div>
+          <!--/.navbar-collapse-->
+        </nav>
+        <!--/.navbar-->
       </div>
-      <!--/.navbar-collapse-->
-    </nav>
-    <!--/.navbar-->
-  </div>
-  <!--/.container-->
-</header>
+      <!--/.container-->
+    </header>
 
-<!--/.header-->
-<!--<div id="#top"></div>-->
+<!-- This is the home page, showing title and background image -->
+  <section id="home">
+      <div class="banner-container"> <img src="images/sunset.gif" alt="banner" />
+        <div class="container banner-content">
+          <div class="hero-text animated fadeInDownBig">
+            <h1 class="responsive-headline" style="font-size: 40px;">Cluster and Cloud Computing Project 2<br/>
+              Australian City Analytics</h1>
 
-<section id="home">
-  <div class="banner-container">
-    <img src="images/sunset.gif" alt="banner" />
-    <div class="container banner-content">
-      <div class="hero-text animated fadeInDownBig">
-        <div style="background: rgba(0, 0, 0, 0.5); border-radius: 25px; padding-top: 10px; padding-bottom: 20px">
-          <h1 class="responsive-headline">Australian City Analytics<br/>
-            Template  for your Business or Corporate</h1>
-          <a href="#drawmap" class="btn btn-danger btn-lg scroll-link" style="width: 150px;">Get Started</a>
-          <a href="#team" class="btn btn-danger btn-lg scroll-link" style="width: 150px;">Instruction</a>
-          <br/>
-          <a href="#basics" class="arrow-link"> <i class="fa fa-chevron-down"></i> </a>
+             <a href="#" class="arrow-link"> <i class="fa fa-chevron-down"></i> </a>
+            <!--<p>Awesome theme for your Business or Corporate site to showcase <br/>
+              your product and service.</p>-->
+          </div>
 
-
+          <!-- <a class="hero-button learn-more smoothscroll text-center" href="#features">Learn More</a>-->
+          <!-- <div class="hero-img"> <img src="images/homepage-1204-background-lapto.png" alt="" class="text-center animated fadeInUpBig"/></div>-->
         </div>
-        <!--<p>Awesome theme for your Business or Corporate site to showcase <br/>
-          your product and service.</p>-->
       </div>
-
-      <!-- <a class="hero-button learn-more smoothscroll text-center" href="#features">Learn More</a>-->
-      <!-- <div class="hero-img"> <img src="images/homepage-1204-background-lapto.png" alt="" class="text-center animated fadeInUpBig"/></div>-->
-    </div>
-  </div>
-  <div class="container hero-text2">
-    <h3>Lorem ipsum dolor sit amet, ea eum labitur scsstie percipitoleat<br/> fabulas complectitur deterruisset at pro</h3>
-  </div>
-</section>
-
-<section id="drawmap">
-  <div class="container-fluid">
-    <div class="heading text-center">
-      <!-- Heading -->
-      <h2>Our Team</h2>
-      <p>At variations of passages of Lorem Ipsum available, but the majority have suffered alteration..</p>
-    </div>
-    <div class="row-fluid">
-      <button id="fuck-button">I am a button</button>
-      <div id="map-navi" class="span12">
-        <ul class="nav nav-tabs">
-          <li class="active map-navibtn">
-            <a id="overview-map" href="#">Overview</a>
-          </li>
-          <li class="map-navibtn">
-            <a id="melbourne-map">Melbourne</a>
-          </li>
-          <li class="map-navibtn">
-            <a id="sydney-map">Sydney</a>
-          </li>
-          <li class="map-navibtn">
-            <a id="adelaide-map">Adelaide</a>
-          </li>
-          <li class="map-navibtn">
-            <a id="brisbane-map">Brisbane</a>
-          </li>
-          <!--<li class="dropdown pull-right">-->
-          <!--<a href="#" data-toggle="dropdown" class="dropdown-toggle map-navibtn">Style <strong class="caret"></strong></a>-->
-          <!--<ul class="dropdown-menu">-->
-          <!--<li>-->
-          <!--<a href="#">操作</a>-->
-          <!--</li>-->
-          <!--<li>-->
-          <!--<a href="#">设置栏目</a>-->
-          <!--</li>-->
-          <!--<li>-->
-          <!--<a href="#">更多设置</a>-->
-          <!--</li>-->
-          <!--<li class="divider">-->
-          <!--</li>-->
-          <!--<li>-->
-          <!--<a href="#">分割线</a>-->
-          <!--</li>-->
-          <!--</ul>-->
-          <!--</li>-->
-        </ul>
+      <div class="container hero-text2">
+        <h3>This is the web application showing our result of assignment2.</h3>
+        <p>To see how to use this app, click the button and watch the instruction video.</p>
+        <a href="https://www.youtube.com/watch?v=nrscmdUk32I" class="btn btn-info btn-lg" role="button" target="_blank">Watch Instruction Video</a>
       </div>
-      <div id="map"></div>
-    </div>
-  </div>
-  <script>
-    $("#melbourne-map").html("xxxx");
-    //        $("#overview-map").parent.removeClass("active");
-//        $("#melbourne-map").parent.addClass("active");
-////        $("#melbourne-map").parent.attr("class", "active");
-//
-//    $("#melbourne-map").click(function () {
-//      alert("xxxx");
-//    });
-  </script>
+    </section>
 
-  <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
-  <script type="text/javascript" src="us-states.js"></script>
-  <script type="text/javascript">
+  <section id="analysis">
 
-    var map = L.map('map').setView([37.8, -96], 4);
-    var mapboxAccessToken = "pk.eyJ1IjoiaGFpZG9uZ3ciLCJhIjoiY2lseDEyNnF5MDVxaHVka3M4eHI3bWVnaiJ9.3zSqNekaroRp0zGsCCCfYQ";
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken, {
-      maxZoom: 18,
-      attribution: 'Data &copy; <a href="https://portal.aurin.org.au/">AURIN</a>',
-      /*
-       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-       'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-       */
-      id: 'mapbox.light'
-      //id: 'mapbox.emerald'
-    }).addTo(map);
 
-    //map.dragging.disable();
-    map.scrollWheelZoom.disable();
+    <script>
+      $(function() {
+        $( "#tabs" ).tabs();
+      });
 
-    // control that shows state info on hover
-    var info = L.control();
+      window.onload = function barChart() {
+        var chart = new CanvasJS.Chart("barChartContainer",
+            {
+              title:{
+                text: "Division of politic relevant & irrelevant twitters"
+              },
+              axisY:{
+                title: "percent"
+              },
+              animationEnabled: true,
+              toolTip:{
+                shared: true,
+                content: "{name}: {y} - <strong>#percent%</strong>"
+              },
+              data:[
+                {
+                  type: "stackedBar100",
+                  showInLegend: true,
+                  name: "Relevant",
+                  dataPoints: [
+                    {y: 291573, label: "Melbourne" },
+                    {y: 231144, label: "Sydney" },
+                    {y: 107194, label: "Adelaide" },
+                    {y: 130493, label: "Brisbane" }
+                  ]
+                },
+                {
+                  type: "stackedBar100",
+                  showInLegend: true,
+                  name: "Irrelevant",
+                  dataPoints: [
+                    {y: 468427, label: "Melbourne" },
+                    {y: 527132, label: "Sydney" },
+                    {y: 195533, label: "Adelaide" },
+                    {y: 247475, label: "Brisbane" }
+                  ]
+                }
+              ]
+            });
+        chart.render();
 
-    info.onAdd = function (map) {
-      this._div = L.DomUtil.create('div', 'info');
-      this.update();
-      return this._div;
-    };
 
-    info.update = function (props) {
-      this._div.innerHTML = '<h4>US Population Density</h4>' +  (props ?
-          '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
-              : 'Hover over a state');
-    };
 
-    info.addTo(map);
 
-    // Add listeners to geoJSON layer
-    var geojson = L.geoJson(statesData, {
-      style: style,
-      onEachFeature: onEachFeature
-    }).addTo(map);
 
-    // get color depending on population density value
-    function getColor(d) {
-      if (d > 1000) { return '#800026'}
-      else if (d > 500) { return '#BD0026'}
-      else if (d > 200) { return '#E31A1C'}
-      else if (d > 100) { return '#FC4E2A'}
-      else if (d > 50) { return '#FD8D3C'}
-      else if (d > 20) { return '#FEB24C'}
-      else if (d > 10) { return '#FED976'}
-      else { return '#FFEDA0'}
-    }
-
-    function style(feature) {
-      return {
-        weight: 1,
-        opacity: 1,
-        color: 'white',
-        dashArray: '3',
-        fillOpacity: 0.5,
-        fillColor: getColor(feature.properties.density)
       };
-    }
+      function pieChart() {
+        var pieChart1 = new CanvasJS.Chart("pieChartContainer",
+            {
+              theme:"theme2",
+              title:{
+                text: "Melbourne"
+              },
+              animationEnabled: true,
+              legend:{
+                verticalAlign: "bottom",
+                horizontalAlign: "center"
+              },
+              data: [
+                {
+                  indexLabelFontSize: 20,
+                  indexLabelFontFamily: "Monospace",
+                  indexLabelFontColor: "darkgrey",
+                  indexLabelLineColor: "darkgrey",
+                  indexLabelPlacement: "outside",
+                  type: "pie",
+                  showInLegend: true,
+                  toolTipContent: "{y} - <strong>#percent%</strong>",
+                  dataPoints: [
+                    {  y: 47694, legendText:"Positive", exploded: true },
+                    {  y: 14108, legendText:"Negative", exploded: true },
+                    {  y: 698198, legendText:"Neutral", exploded: true }
+                  ]
+                }
+              ]
+            });
 
-    function highlightFeature(e) {
-      var layer = e.target;
-      layer.setStyle({
-        weight: 3,
-        color: 'white',
-        dashArray: '',
-        fillOpacity: 0.8
-      });
-      if (!L.Browser.ie && !L.Browser.opera) {
-        layer.bringToFront();
+        pieChart1.render();
+
+        var pieChart2 = new CanvasJS.Chart("pieChartContainer2",
+            {
+              theme:"theme2",
+              title:{
+                text: "Sydney"
+              },
+              animationEnabled: true,
+              legend:{
+                verticalAlign: "bottom",
+                horizontalAlign: "center"
+              },
+              data: [
+                {
+                  indexLabelFontSize: 20,
+                  indexLabelFontFamily: "Monospace",
+                  indexLabelFontColor: "darkgrey",
+                  indexLabelLineColor: "darkgrey",
+                  indexLabelPlacement: "outside",
+                  type: "pie",
+                  showInLegend: true,
+                  toolTipContent: "{y} - <strong>#percent%</strong>",
+                  dataPoints: [
+                    {  y: 36823, legendText:"Positive", exploded: true },
+                    {  y: 11702, legendText:"Negative", exploded: true },
+                    {  y: 709751, legendText:"Neutral", exploded: true }
+                  ]
+                }
+              ]
+            });
+
+        pieChart2.render();
+
+        var pieChart3 = new CanvasJS.Chart("pieChartContainer3",
+            {
+              theme:"theme2",
+              title:{
+                text: "Adelaide"
+              },
+              animationEnabled: true,
+              legend:{
+                verticalAlign: "bottom",
+                horizontalAlign: "center"
+              },
+              data: [
+                {
+                  indexLabelFontSize: 20,
+                  indexLabelFontFamily: "Monospace",
+                  indexLabelFontColor: "darkgrey",
+                  indexLabelLineColor: "darkgrey",
+                  indexLabelPlacement: "outside",
+                  type: "pie",
+                  showInLegend: true,
+                  toolTipContent: "{y} - <strong>#percent%</strong>",
+                  dataPoints: [
+                    {  y: 20358, legendText:"Positive", exploded: true },
+                    {  y: 5615, legendText:"Negative", exploded: true },
+                    {  y: 276754, legendText:"Neutral", exploded: true }
+                  ]
+                }
+              ]
+            });
+
+        pieChart3.render();
+
+        var pieChart4 = new CanvasJS.Chart("pieChartContainer4",
+            {
+              theme:"theme2",
+              title:{
+                text: "Brisbane"
+              },
+              animationEnabled: true,
+              legend:{
+                verticalAlign: "bottom",
+                horizontalAlign: "center"
+              },
+              data: [
+                {
+                  indexLabelFontSize: 20,
+                  indexLabelFontFamily: "Monospace",
+                  indexLabelFontColor: "darkgrey",
+                  indexLabelLineColor: "darkgrey",
+                  indexLabelPlacement: "outside",
+                  type: "pie",
+                  showInLegend: true,
+                  toolTipContent: "{y} - <strong>#percent%</strong>",
+                  dataPoints: [
+                    {  y: 25457, legendText:"Positive", exploded: true },
+                    {  y: 7134, legendText:"Negative", exploded: true },
+                    {  y: 345377, legendText:"Neutral", exploded: true }
+                  ]
+                }
+              ]
+            });
+
+        pieChart4.render();
+
       }
-      info.update(layer.feature.properties);
-    }
 
-    function resetHighlight(e) {
-      geojson.resetStyle(e.target);
-      info.update();
-    }
+    </script>
 
-    function zoomToFeature(e) {
-      map.fitBounds(e.target.getBounds());
-    }
-
-    function onEachFeature(feature, layer) {
-      layer.on({
-        mouseover: highlightFeature,
-        mouseout: resetHighlight,
-        click: zoomToFeature
-      });
-    }
-
-    var legend = L.control({position: 'bottomright'});
-    legend.onAdd = function (map) {
-      var div = L.DomUtil.create('div', 'info legend'),
-          grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-          labels = [],
-          from, to;
-      for (var i = 0; i < grades.length; i++) {
-        from = grades[i];
-        to = grades[i + 1];
-        labels.push(
-            '<i style="background:' + getColor(from + 1) + '"></i> ' +
-            from + (to ? '&ndash;' + to : '+'));
-      }
-
-      div.innerHTML = labels.join('<br>');
-      return div;
-    };
-
-    legend.addTo(map);
-
-  </script>
-
-</section>
-
-<section id="services" class="page-section colord">
-  <div class="container">
-    <h3 style="text-align: center; padding-bottom: 15px">Front-End Web Application</h3>
-    <div class="row">
-      <!-- item -->
-      <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-        <i class="circle"><img src="images/technique/html5.png" alt="" /></i>
-        <h3>HTML5</h3>
-        <p>Nullam ac rhoncus sapien, non gravida purus.</p>
-      </div>
-      <!-- end: -->
-
-      <!-- item -->
-      <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-        <i class="circle"> <img src="images/technique/css3.png" alt="" /></i>
-        <h3>CSS3</h3>
-        <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet congue.</p>
-      </div>
-      <!-- end: -->
-
-      <!-- item -->
-      <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-        <i class="circle"> <img src="images/technique/javascript.png" alt="" /></i>
-        <h3>JavaScript</h3>
-        <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer ultricies sed elit impe.</p>
-      </div>
-      <!-- end: -->
-
-      <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-        <i class="circle"> <img src="images/technique/bootstrap.png" alt="" /></i>
-        <h3>Bootstrap</h3>
-        <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>
-      </div>
-
-      <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-        <i class="circle"> <img src="images/technique/jquery.png" alt="" /></i>
-        <h3>jQuery</h3>
-        <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>
-      </div>
-
-      <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-        <i class="circle"> <img src="images/technique/ajax.png" alt="" /></i>
-        <h3>AJAX</h3>
-        <p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>
-      </div>
-      <!-- end:-->
-    </div>
-  </div>
-  <!--/.container-->
-</section>
-
-<section id="aboutUs">
-  <div class="container">
-    <div class="heading text-center">
+    <div class=" text-center">
       <!-- Heading -->
-      <h2>About Us</h2>
-      <p>At lorem Ipsum available, but the majority have suffered alteration in some form by injected humour.</p>
+      <hr/>
+      <h2>Twitter Data Analysis</h2>
+      <p>We dig the sentiment of the twitter from the twitter harvester to analysis whether it contains positive emotions,
+        negative emotions or a natural emotion for the authors. We also decide to search whether a tweet is related to
+        politics as our scenarios</p>
     </div>
-    <div class="row feature design">
-      <div class="area1 columns right">
-        <h3>Clean and Modern Design.</h3>
-        <p>Lorem ipsum dolor sit amet, ea eum labitur scsstie percipitoleat fabulas complectitur deterruisset at pro. Odio quaeque reformidans est eu, expetendis intellegebat has ut, viderer invenire ut his. Has molestie percipit an. Falli volumus efficiantur sed id, ad vel noster propriae. Ius ut etiam vivendo, graeci iudicabit constituto at mea. No soleat fabulas prodesset vel, ut quo solum dicunt.
-          Nec et jority have suffered alteration. </p>
-        <p>Odio quaeque reformidans est eu, expetendis intellegebat has ut, viderer invenire ut his. Has molestie percipit an. Falli volumus efficiantur sed id, ad vel noster propriae. Ius ut etiam vivendo, graeci iudicabit constituto at mea. No soleat fabulas prodesset vel, ut quo solum dicunt.
-          Nec et amet vidisse mentitumsstie percipitoleat fabulas. </p>
-        <a href="#" class="btn">Download Apps</a>
-        <a href="#" class="btn">Free Apps</a>
+
+    <div id="tabs" style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
+      <ul style="background: lightgrey;">
+        <li><a href="#tabs-1" >Political Relevance</a></li>
+        <li onclick="pieChart()"><a href="#tabs-2">Sentiment Analysis</a></li>
+      </ul>
+      <div id="tabs-1">
+        <p></p>
+        <p>From the graph, twitter users in Melbourne tend not to be very active in publishing their opinions to certain
+          political affairs. The other three areas seem to have the similar percentage for people show more opinions to politics.</p>
+        <div id="barChartContainer" style="height: 250px; width: 80%; margin: auto"></div>
+        <p>When considering the data from twitter harvester and the scenarios situation we try to search, some informations of
+          the population distribution of each city by different age levels. Moreover, political affairs can always affect the
+          employment rate and unemployment rate of a certain area. So we also try to find if there are some relationship between
+          the employment rate and politics focusing level in each city. In this way, another datasets we need in AURIN is the
+          employment and unemployment rate of each city.</p>
       </div>
-      <div class="area2 columns feature-media left"> <img src="images/feature-img-1.png" alt="" width="100%"> </div>
-    </div>
-    <div class="row dataTxt">
-      <div class="col-md-4 col-sm-6">
-        <h4>What We Do?</h4>
-        <p>Lorem ipsum dolor consectetursit amet, consectetur adipiscing elit consectetur euismod </p>
-        <p>Lorem ipsum dolor sit amet, ea eum labitur scsstie percipitoleat fabulas complectitur deterruisset at pro. Odio quaeque reformidans est eu, expetendis intellegebat has ut, viderer invenire ut his. Has molestie percipit an. Falli volumus efficiantur sed id, ad vel noster propriae. Ius ut etiam vivendo, graeci iudicabit constituto at mea.</p>
-
-        <br>
-      </div>
-
-      <div class="col-md-4 col-sm-6">
-
-        <h4>Why Choose Us?</h4>
-        <p>Lorem ipsum dolor consectetursit amet, consectetur adipiscing elit consectetur euismod </p>
-        <ul class="listArrow">
-          <li>Lorem ipsum dolor consectetursit amet, consectet</li>
-          <li>Has molestie percipit an. Falli volumus efficiantur</li>
-          <li>Falli volumus efficiantur sed id, ad vel noster</li>
-          <li>Lorem ipsum dolor consectetursit amet, consectetur</li>
-          <li>Ius ut etiam vivendo, graeci iudicabit constitutoa</li>
-        </ul>
-        <!-- Accordion starts -->
-      </div>
-
-      <div class="col-md-4 col-sm-6">
-        <h4>Our Expertise</h4>
-        <p>Lorem ipsum dolor consectetursit amet, consectetur adipiscing elit consectetur euismod.</p>
-        <h6>Web Designing</h6>
-        <div class="progress pb-sm">
-          <div class="progress-bar progress-bar-red" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-            <span class="sr-only">40% Complete (success)</span>
+      <div id="tabs-2" >
+        <p>All data from twitter in four areas will be grouped in three levels: positive, negative and neutral.</p>
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <div id="pieChartContainer" style="height: 100%; width: 100%;"></div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <div id="pieChartContainer2" style="height: 100%; width: 100%;"></div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <div id="pieChartContainer3" style="height: 100%; width: 100%;"></div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <div id="pieChartContainer4" style="height: 100%; width: 100%;"></div>
+            </div>
           </div>
         </div>
-        <h6>Responsive Design</h6>
-        <div class="progress pb-sm">
-          <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-            <span class="sr-only">40% Complete (success)</span>
-          </div>
-        </div>
-        <h6>Browser Compatability</h6>
-        <div class="progress pb-sm">
-          <div class="progress-bar progress-bar-lblue" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-            <span class="sr-only">40% Complete (success)</span>
-          </div>
-        </div>
+        <!--<div id="barChartContainer2" style="height: 250px; width: 80%; margin: auto"></div>-->
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <p>in those four area, many tweets do not present an emotion. Moreover, according to the total numbers of the tweets
+          in four cities, the percentages of the positive tweets or negative tweets are very similar. People in Adelaide and
+          Brisbane express more emotions especially positive emotions than Melbourne and Sydney by using twitter.</p>
+        <p>Although people in Adelaide and Brisbane tend to express their emotion more, the total numbers of people show
+          their happiness and sadness are less than the other two cities. The reason mainly because the number of twitter
+          users in Melbourne and Sydney are higher than Brisbane and Adelaide.</p>
+
       </div>
 
     </div>
-  </div>
-</section>
 
-<section id="clients">
-  <div id="demo" class="clients">
+  </section>
+
+  <br/><br/>
+
+  <section id="aurin_analysis">
+
+    <script>
+      $(function() {
+        $( "#tabs-aurin" ).tabs();
+      });
+    </script>
+
+    <div class=" text-center">
+      <!-- Heading -->
+      <h2>AURIN Data</h2>
+      <p>To analysis data fetched from twitter, we also download some data from <a href="http://portal.aurin.org.au">AURIN</a>, which is the abbreviation of Australian Urban Research Infrastructure Network, it plays a significant role in this assignment. AURIN records a huge amount of urban information of Australia, and those data are collected from government organs, so the source is more accurate and trustworthy.</p>
+    </div>
+
+
+    <div id="tabs-aurin" style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
+      <ul style="background: lightgrey;">
+        <li><a href="#tabs-aurin-1">Employment Rate</a></li>
+        <li><a href="#tabs-aurin-2">Age Distribution</a></li>
+      </ul>
+      <div id="tabs-aurin-1">
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div id="map"></div>
+          </div>
+        </div>
+        <script type="text/javascript">
+          //var map = L.map('map').setView([-27.452068, 153.044959], 10.54);
+          var map = L.map("map").setView([-34.909437, 138.551485], 11);
+//          var map = L.map("map").setView([-37.806027, 144.963262], 11.2);
+
+
+          var mapboxAccessToken = "pk.eyJ1IjoiaGFpZG9uZ3ciLCJhIjoiY2lseDEyNnF5MDVxaHVka3M4eHI3bWVnaiJ9.3zSqNekaroRp0zGsCCCfYQ";
+          L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxAccessToken, {
+            maxZoom: 18,
+            attribution: 'Data &copy; <a href="https://portal.aurin.org.au/">AURIN</a>',
+            id: 'mapbox.streets'
+          }).addTo(map);
+
+          //map.dragging.disable();
+          map.scrollWheelZoom.disable();
+
+          // control that shows state info on hover
+          var info = L.control();
+
+          info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+          };
+
+          info.update = function (props) {
+            this._div.innerHTML = "<h4>Employment Rate</h4>" +  (props ?
+                '<b>' + props.feature_name + '</b><br />' + props.Employment_to_population_ratio : 'Hover over a suburb');
+          };
+
+          info.addTo(map);
+
+
+          // Add listeners to geoJSON layer
+          var geojson = L.geoJson(employmentData, {
+            style: style,
+            onEachFeature: onEachFeature
+          }).addTo(map);
+
+
+
+          // get color depending on population density value
+          function getColor(d) {
+            if (d > 1000) {
+              return '#800026'
+            } else if (d > 0.75) {
+              return '#BD0026'
+            } else if (d > 0.7) {
+              return '#E31A1C'
+            } else if (d > 0.65) {
+              return '#FC4E2A'
+            } else if (d > 0.6) {
+              return '#FD8D3C'
+            } else if (d > 0.55) {
+              return '#FEB24C'
+            } else if (d > 0.5) {
+              return '#FED976'
+            } else {
+              return '#FFEDA0'
+            }
+          }
+
+          function style(feature) {
+            return {
+              weight: 2,
+              opacity: 1,
+              color: 'white',
+              dashArray: '3',
+              fillOpacity: 0.7,
+              fillColor: getColor(feature.properties.Employment_to_population_ratio)
+            };
+          }
+
+          function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+              weight: 5,
+              color: '#666',
+              dashArray: '',
+              fillOpacity: 0.7
+            });
+
+            if (!L.Browser.ie && !L.Browser.opera) {
+              layer.bringToFront();
+            }
+
+            info.update(layer.feature.properties);
+          }
+
+
+
+          function resetHighlight(e) {
+            geojson.resetStyle(e.target);
+            info.update();
+          }
+
+          function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+          }
+
+          function onEachFeature(feature, layer) {
+            layer.on({
+              mouseover: highlightFeature,
+              mouseout: resetHighlight,
+              click: zoomToFeature
+            });
+          }
+
+//          var legend = L.control({position: 'bottomright'});
+//
+//          legend.onAdd = function (map) {
+//
+//            var div = L.DomUtil.create('div', 'info legend'),
+//                grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+//                labels = [],
+//                from, to;
+//
+//            for (var i = 0; i < grades.length; i++) {
+//              from = grades[i];
+//              to = grades[i + 1];
+//
+//              labels.push(
+//                  '<i style="background:' + getColor(from + 1) + '"></i> ' +
+//                  from + (to ? '&ndash;' + to : '+'));
+//            }
+//
+//            div.innerHTML = labels.join('<br>');
+//            return div;
+//          };
+//
+//          legend.addTo(map);
+
+        </script>
+      </div>
+      <div id="tabs-aurin-2">
+        <div class="container">
+          <h2>Associative Data</h2>
+          <p>The .table-hover class enables a hover state on table rows:</p>
+          <hr/>
+          <p>When handling AURIN’s data, we found that the datasets we try to find is based on Statistic Area 2 that including
+            the Greater Melbourne, the Greater Sydney, the Greater Brisbane and the Greater adelaide. By using AURIN’s filter,
+            we only search the data in certain bounding box related to twitter harvesters’ areas. However, institutions in AURIN
+            collect the data according to the suburbs of the four area. So we using some merge algorithms to calculate the data
+            to make them shown in city level.</p>
+          <table class="table table-striped table-hover">
+            <thead class="thead-inverse">
+            <tr>
+              <th>#</th>
+              <th>Adelaide</th>
+              <th>Brisbane</th>
+              <th>Melbourne</th>
+              <th>Sydney</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>0-9</td>
+              <td>151975</td>
+              <td>296818</td>
+              <td>395013</td>
+              <td>579587</td>
+            </tr>
+            <tr>
+              <td>10-19</td>
+              <td>155439</td>
+              <td>281906</td>
+              <td>364667</td>
+              <td>525467</td>
+            </tr>
+            <tr>
+              <td>20-29</td>
+              <td>189155</td>
+              <td>352865</td>
+              <td>545781</td>
+              <td>696791</td>
+            </tr>
+            <tr>
+              <td>30-39</td>
+              <td>169031</td>
+              <td>323124</td>
+              <td>507816</td>
+              <td>694766</td>
+            </tr>
+            <tr>
+              <td>40-49</td>
+              <td>179203</td>
+              <td>307181</td>
+              <td>451936</td>
+              <td>620981</td>
+            </tr>
+            <tr>
+              <td>50-59</td>
+              <td>170484</td>
+              <td>258945</td>
+              <td>383863</td>
+              <td>542461</td>
+            </tr>
+            <tr>
+              <td>60-69</td>
+              <td>137827</td>
+              <td>193392</td>
+              <td>288307</td>
+              <td>401816</td>
+            </tr>
+            <tr>
+
+              <td>70-79</td>
+              <td>83063</td>
+              <td>102211</td>
+              <td>172353</td>
+              <td>229435</td>
+            </tr>
+            <tr>
+              <td>85+</td>
+              <td>61203</td>
+              <td>65037</td>
+              <td>115806</td>
+              <td>156621</td>
+            </tr>
+            <tr>
+              <td>Sum</td>
+              <td>1297380</td>
+              <td>2181479</td>
+              <td>3225542</td>
+              <td>4447925</td>
+            </tr>
+            <tr>
+              <td>Average Age</td>
+              <td>39.75</td>
+              <td>36.52</td>
+              <td>37.77</td>
+              <td>37.53</td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <p>Brisbane is the youngest city while Adelaide is the oldest one in those four cities. Melbourne and Sydney own a
+          really similar architecture in age distribution.</p>
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <img alt="140x140" src="images/adelaide_age.png"/>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <img alt="140x140" src="images/brisbane_age.png"/>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <img alt="140x140" src="images/melbourne_age.png"/>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-6">
+              <img alt="140x140" src="images/sydney_age.png"/>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <br/><br/>
+
+  <section id="associative_analysis">
+    <script>
+      $(function() {
+        $( "#asso-tabs" ).tabs();
+      });
+
+    </script>
+
+    <div class=" text-center">
+      <!-- Heading -->
+      <h2>Associative Analysis</h2>
+      <p>After finishing collecting and analysing data from twitter and AURIN. We must combine these data to see if there
+        is any relationship between the properties in those data.</p>
+    </div>
+
+    <div id="asso-tabs" style="background: none repeat scroll 0% 0% rgb(255, 255, 255);">
+      <ul style="background: lightgrey;">
+        <li><a href="#asso-tabs-1">Table</a></li>
+        <li><a href="#asso-tabs-2">Explore</a></li>
+        <li><a href="#asso-tabs-3">Employment rate VS Emotion</a></li>
+        <li><a href="#asso-tabs-4">Employment rate VS Politics focusing</a></li>
+        <li><a href="#asso-tabs-5">Average age VS Emotion and Politics focusing</a></li>
+      </ul>
+      <div id="asso-tabs-1">
+
+        <div class="container">
+          <!--<h2>Associative Data</h2>-->
+          <hr/>
+          <table class="table table-hover">
+            <thead class="thead-inverse">
+              <tr>
+                <th>#</th>
+                <th>Adelaide</th>
+                <th>Brisbane</th>
+                <th>Melbourne</th>
+                <th>Sydney</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr class="success">
+              <td>Positive Attitude</td>
+              <td>6.72%</td>
+              <td>6.74%</td>
+              <td>6.28%</td>
+              <td>4.86%</td>
+            </tr>
+            <tr class="success">
+              <td>Negative Attitude</td>
+              <td>1.85%</td>
+              <td>1.89%</td>
+              <td>1.85%</td>
+              <td>1.54%</td>
+            </tr>
+            <tr class="info">
+              <td>Politics Relevance</td>
+              <td>35.41%</td>
+              <td>34.52%</td>
+              <td>38.36%</td>
+              <td>30.48%</td>
+            </tr>
+            <tr class="info">
+              <td>Politics Irrelevance</td>
+              <td>64.59%</td>
+              <td>65.48%</td>
+              <td>61.64%</td>
+              <td>69.52%</td>
+            </tr>
+            <tr class="warning">
+              <td>Employment Rate</td>
+              <td>56.32%</td>
+              <td>62.63%</td>
+              <td>61.19%</td>
+              <td>61.29%</td>
+            </tr>
+
+            <tr class="warning">
+              <td>Unemployment Rate</td>
+              <td>5.66%</td>
+              <td>5.68%</td>
+              <td>5.48%</td>
+              <td>5.87%</td>
+            </tr>
+            <tr class="danger">
+              <td>Average Age</td>
+              <td>39.75</td>
+              <td>36.52</td>
+              <td>37.77</td>
+              <td>37.53</td>
+            </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+
+      </div>
+      <div id="asso-tabs-2">
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="col-md-1"></div>
+            <div class="col-md-4 col-sm-5 col-xs-5">
+              <div class="demo">
+                <form action="#">
+                  <fieldset>
+                    <label for="twitter">Twitter Data</label>
+                    <select name="twitter" id="twitter">
+                      <option value="Positive" selected="selected">Positive Attitude</option>
+                      <option value="Negative">Negative Attitude</option>
+                      <option value="Politics">Politics Relevance</option>
+                      <option value="NoPolitics">Politics Irrelevance</option>
+                    </select>
+
+                    <label for="aurin">AURIN Data</label>
+                    <select name="aurin" id="aurin">
+                      <option value="Employment">Employment Rate</option>
+                      <option value="Unemployment">Unemployment Rate</option>
+                      <option value="Age" selected="selected">Average Age</option>
+                    </select>
+                  </fieldset>
+                </form>
+
+                <button id="confirmBtn" class="btn btn-info btn-lg" role="button">Compare</button>
+
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-7 col-xs-7">
+              <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+            </div>
+            <div class="col-md-3"></div>
+          </div>
+        </div>
+      </div>
+      <div id="asso-tabs-3">
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="col-md-2"></div>
+            <div class="col-md-4 col-sm-6 col-xs-6">
+              <img alt="140x140" src="images/charts/p_pos_emp.png"/>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-6">
+              <img alt="140x140" src="images/charts/p_neg_unemp.png"/>
+            </div>
+            <div class="col-md-2"></div>
+          </div>
+        </div>
+        <p>Sydney owns lowest politics relevance while the employment rate is either the lowest one or the highest one.
+          Meanwhile, Adelaide got a lowest employment rate and second highest political relevance.</p>
+        <p>For the second part, it is almost can not find a rule either. In this way, there is not an obvious regularization.</p>
+
+      </div>
+      <div id="asso-tabs-4" >
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-4 col-sm-6 col-xs-6">
+              <img alt="140x140" src="images/charts/p_emp_pol.png"/>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-6">
+              <img alt="140x140" src="images/charts/p-unemp_pol.png"/>
+            </div>
+            <div class="col-md-2"></div>
+
+          </div>
+        </div>
+        <!--<p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>-->
+
+      </div>
+      <div id="asso-tabs-5">
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-8 col-sm-12 col-xs-12">
+              <img alt="140x140" src="images/charts/avg_age.png"/>
+
+            </div>
+            <div class="col-md-2"></div>
+
+          </div>
+        </div>
+        <!--<p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>-->
+
+      </div>
+
+
+    </div>
+
+  </section>
+
+  <section id="group" class="page-section">
+
+    <div class="container-fluid">
+
+      <div class="heading text-center">
+        <!-- Heading -->
+        <h2>Group Members</h2>
+        <!--<p>At variations of passages of Lorem Ipsum available, but the majority have suffered alteration..</p>-->
+      </div>
+
+      <div class="row-fluid">
+        <div class="col-md-1"></div>
+        <div class="col-md-2 col-sm-4 col-xs-6">
+          <div class="team-member pDark">
+            <img alt="140x140" src="images/profile_jingwen.jpg" class="img-border"/>
+            <!-- Member Details -->
+            <h4>Jingwen Wu</h4>
+            <!-- Designation -->
+            <span class="pos">671750</span>
+            <div class="team-socials">
+              <a href="https://github.com/Le0nHardt/"><i class="fa fa-github"></i></a>
+            </div>
+            <span class="pos duty">Twitter harvesting & Data processing</span>
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-6">
+          <div class="team-member pDark">
+            <img alt="140x140" src="images/profile_weiwei.jpg" class="img-border" />
+            <!-- Member Details -->
+            <h4>Weiwei Cai</h4>
+            <!-- Designation -->
+            <span class="pos">682835</span>
+            <div class="team-socials">
+              <a href="#"><i class="fa fa-github"></i></a>
+            </div>
+            <span class="pos duty">Ansible, Boto & Data processing and analysis</span>
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-6">
+          <div class="team-member pDark">
+            <img alt="140x140" src="images/profile_xvdi.jpg" class="img-border" />
+            <!-- Member Details -->
+            <h4>Di Xu</h4>
+            <!-- Designation -->
+            <span class="pos">719678</span>
+            <div class="team-socials">
+              <a href="#"><i class="fa fa-github"></i></a>
+            </div>
+            <span class="pos duty">Deploying CouchDB & Data management</span>
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-6">
+          <div class="team-member pDark">
+            <img alt="140x140" src="images/profiles/profile-zhenwei.jpg" class="img-border" />
+            <!-- Member Details -->
+            <h4>Zhenwei Wang</h4>
+            <!-- Designation -->
+            <span class="pos">687793</span>
+            <div class="team-socials">
+              <a href="https://github.com/ZhenweiWang" target="_blank"><i class="fa fa-github"></i></a>
+            </div>
+            <span class="pos duty">ReSTful design & AURIN data handeling</span>
+          </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-xs-6">
+          <div class="team-member pDark">
+            <img alt="140x140" src="images/profiles/profile-haidong.jpg" class="img-border" />
+            <!-- Member Details -->
+            <h4>Haidong Wang</h4>
+            <!-- Designation -->
+            <span class="pos">678725</span>
+            <div class="team-socials">
+              <a href="https://github.com/wanghdnku" target="_blank"><i class="fa fa-github"></i></a>
+            </div>
+            <span class="pos duty">Data analysis & Front-end development</span>
+          </div>
+        </div>
+        <div class="col-md-1"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <section id="techniques" class="page-section colord">
     <div class="container">
       <div class="heading text-center">
-        <h2>Oure Clients</h2>
+        <h2 style="color: white;">Techniques used in this project</h2>
+        <p>This system is comprised with multiple techniques and softwares, like couchDB, Boto, Ansible, machine learning toolkits and many front & back end techniques.</p>
       </div>
+
+      <h3 style="text-align: center; padding-bottom: 15px">Configuring Environment</h3>
       <div class="row">
-        <div class="col-md-12">
-          <div class="customNavigation"> <a class="prev"><i class="fa fa-chevron-circle-left"></i></a> <a class="next"><i class="fa fa-chevron-circle-right"></i></a> </div>
-          <div id="owl-demo" class="owl-carousel">
-            <div class="item"> <span class="helper"> <img src="images/clients/client-1.png" alt="client" /></span> </div>
-            <div class="item"> <span class="helper"> <img src="images/clients/client-2.png" alt="client" /></span> </div>
-            <div class="item"> <span class="helper"> <img src="images/clients/client-3.png" alt="client" /></span> </div>
-            <div class="item"> <span class="helper"> <img src="images/clients/client-4.png" alt="client" /></span> </div>
-            <div class="item"> <span class="helper"> <img src="images/clients/client-5.png" alt="client" /></span> </div>
-            <div class="item"> <span class="helper"> <img src="images/clients/client-6.png" alt="client" /></span> </div>
-            <div class="item"> <span class="helper"> <img src="images/clients/client-7.png" alt="client" /></span> </div>
-            <div class="item"> <span class="helper"> <img src="images/clients/client-8.png" alt="client" /></span> </div>
-            <div class="item"> <span class="helper"> <img src="images/clients/client-9.png" alt="client" /></span> </div>
-          </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"><img src="images/technique/nectar-1.png" alt="" /></i>
+          <h3>NeCTAR</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus.</p>-->
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="work" class="page-section page">
-  <div class="container text-center">
-    <div class="heading">
-      <h2>Our Work Speaks</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, alias enim placeat earum quos ab.</p>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div id="portfolio">
-          <ul class="filters list-inline">
-            <li> <a class="active" data-filter="*" href="#">All</a> </li>
-            <li> <a data-filter=".photography" href="#">Photography</a> </li>
-            <li> <a data-filter=".branding" href="#">Branding</a> </li>
-            <li> <a data-filter=".web" href="#">Web</a> </li>
-          </ul>
-          <ul class="items list-unstyled clearfix animated fadeInRight showing" data-animation="fadeInRight" style="position: relative; height: 438px;">
-            <li class="item branding" style="position: absolute; left: 0px; top: 0px;"> <a href="images/work/1.jpg" class="fancybox"> <img src="images/work/1.jpg" alt="">
-              <div class="overlay"> <span>Etiam porta</span> </div>
-            </a> </li>
-            <li class="item photography" style="position: absolute; left: 292px; top: 0px;"> <a href="images/work/2.jpg" class="fancybox"> <img src="images/work/2.jpg" alt="">
-              <div class="overlay"> <span>Lorem ipsum</span> </div>
-            </a> </li>
-            <li class="item branding" style="position: absolute; left: 585px; top: 0px;"> <a href="images/work/3.jpg" class="fancybox"> <img src="images/work/3.jpg" alt="">
-              <div class="overlay"> <span>Vivamus quis</span> </div>
-            </a> </li>
-            <li class="item photography" style="position: absolute; left: 877px; top: 0px;"> <a href="images/work/4.jpg" class="fancybox"> <img src="images/work/4.jpg" alt="">
-              <div class="overlay"> <span>Donec ac tellus</span> </div>
-            </a> </li>
-            <li class="item photography" style="position: absolute; left: 0px; top: 219px;"> <a href="images/work/5.jpg" class="fancybox"> <img src="images/work/5.jpg" alt="">
-              <div class="overlay"> <span>Etiam volutpat</span> </div>
-            </a> </li>
-            <li class="item web" style="position: absolute; left: 292px; top: 219px;"> <a href="images/work/6.jpg" class="fancybox"> <img src="images/work/6.jpg" alt="">
-              <div class="overlay"> <span>Donec congue </span> </div>
-            </a> </li>
-            <li class="item photography" style="position: absolute; left: 585px; top: 219px;"> <a href="images/work/7.jpg" class="fancybox"> <img src="images/work/7.jpg" alt="">
-              <div class="overlay"> <span>Nullam a ullamcorper diam</span> </div>
-            </a> </li>
-            <li class="item web" style="position: absolute; left: 877px; top: 219px;"> <a href="images/work/8.jpg" class="fancybox"> <img src="images/work/8.jpg" alt="">
-              <div class="overlay"> <span>Etiam consequat</span> </div>
-            </a> </li>
-          </ul>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"> <img src="images/technique/ansible.png" alt="" /></i>
+          <h3>Ansible</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet congue.</p>-->
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="plans" class="page-section">
-  <div class="container">
-    <div class="heading text-center">
-      <!-- Heading -->
-      <h2>Our Plans</h2>
-      <p>At lorem Ipsum available, but the majority have suffered alteration in some form by injected humour.</p>
-    </div>
-    <div class="row flat">
-      <div class="col-lg-12 col-md-12 col-xs-12">
-        <ul class="plan plan2 featured">
-          <li class="plan-name">Standard </li>
-          <li class="plan-price"> <strong>$39</strong> / month </li>
-          <li> <strong>5GB</strong> Storage </li>
-          <li> <strong>1GB</strong> RAM </li>
-          <li> <strong>400GB</strong> Bandwidth </li>
-          <li> <strong>10</strong> Email Address </li>
-          <li> <strong>Forum</strong> Support </li>
-          <li class="plan-action"> <a href="#" class="btn btn-danger btn-lg">Signup</a> </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="team" class="page-section">
-
-  <div class="container-fluid">
-    <div class="heading text-center">
-      <!-- Heading -->
-      <h2>Our Team</h2>
-      <p>At variations of passages of Lorem Ipsum available, but the majority have suffered alteration..</p>
-    </div>
-
-    <div class="row-fluid">
-      <div class="col-md-1"></div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <div class="team-member pDark">
-          <img alt="140x140" src="http://placehold.it/300x300" class="img-border"/>
-          <!-- Member Details -->
-          <h4>Name</h4>
-          <!-- Designation -->
-          <span class="pos">student ID</span>
-          <div class="team-socials">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-google-plus"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-github"></i></a>
-          </div>
-          <span class="pos duty">Data analysis & Front-end development</span>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"> <img src="images/technique/Boto-Logo.png" alt="" /></i>
+          <h3>Boto</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer ultricies sed elit impe.</p>-->
         </div>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <div class="team-member pDark">
-          <img alt="140x140" src="http://placehold.it/300x300" class="img-border" />
-          <!-- Member Details -->
-          <h4>Name</h4>
-          <!-- Designation -->
-          <span class="pos">student ID</span>
-          <div class="team-socials">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-google-plus"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-github"></i></a>
-          </div>
-          <span class="pos duty">Data analysis & Front-end development</span>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"> <img src="images/technique/ubuntu1.png" alt="" /></i>
+          <h3>Ubuntu</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer ultricies sed elit impe.</p>-->
         </div>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <div class="team-member pDark">
-          <img alt="140x140" src="http://placehold.it/300x300" class="img-border" />
-          <!-- Member Details -->
-          <h4>Name</h4>
-          <!-- Designation -->
-          <span class="pos">student ID</span>
-          <div class="team-socials">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-google-plus"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="#"><i class="fa fa-github"></i></a>
-          </div>
-          <span class="pos duty">Data analysis & Front-end development</span>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"> <img src="images/technique/apache.png" alt="" /></i>
+          <h3>Apache2</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer ultricies sed elit impe.</p>-->
         </div>
+        <div class="col-md-1"></div>
       </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <div class="team-member pDark">
-          <img alt="140x140" src="images/profile-zhenwei.jpg" class="img-border" />
-          <!-- Member Details -->
-          <h4>Zhenwei Wang</h4>
-          <!-- Designation -->
-          <span class="pos">687793</span>
-          <div class="team-socials">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-google-plus"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="https://github.com/ZhenweiWang" target="_blank"><i class="fa fa-github"></i></a>
-          </div>
-          <span class="pos duty">ReSTful design & AURIN data handeling</span>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <div class="team-member pDark">
-          <img alt="140x140" src="images/profile-haidong.jpg" class="img-border" />
-          <!-- Member Details -->
-          <h4>Haidong Wang</h4>
-          <!-- Designation -->
-          <span class="pos">678725</span>
-          <div class="team-socials">
-            <a href="#"><i class="fa fa-facebook"></i></a>
-            <a href="#"><i class="fa fa-google-plus"></i></a>
-            <a href="#"><i class="fa fa-twitter"></i></a>
-            <a href="https://github.com/wanghdnku" target="_blank"><i class="fa fa-github"></i></a>
-          </div>
-          <span class="pos duty">Data analysis & Front-end development</span>
-        </div>
-      </div>
-      <div class="col-md-1"></div>
-    </div>
-  </div>
-
-</section>
-
-<section id="contactUs" class="contact-parlex">
-  <div class="parlex-back">
-    <div class="container">
+      <br/>
+      <h3 style="text-align: center; padding-bottom: 15px">Twitter Harvesting & Data Processing</h3>
       <div class="row">
-        <div class="heading text-center">
-          <!-- Heading -->
-          <h2>Contact Us</h2>
-          <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered.</p>
-        </div>
-      </div>
-      <div class="row mrgn30">
-        <div class="col-sm-12 col-md-offset-2 col-md-8">
-          <!--NOTE: Update your email Id in "contact_me.php" file in order to receive emails from your contact form-->
-          <form name="sentMessage" id="contactForm"  novalidate>
-            <div class="control-group">
-              <div class="controls">
-                <input type="text" class="form-control"
-                       placeholder="Full Name" id="name" required
-                       data-validation-required-message="Please enter your name" />
-                <p class="help-block"></p>
-              </div>
-            </div>
-            <div class="control-group">
-              <div class="controls">
-                <input type="email" class="form-control" placeholder="Email"
-                       id="email" required
-                       data-validation-required-message="Please enter your email" />
-              </div>
-            </div>
 
-            <div class="control-group">
-              <div class="controls">
-                        <textarea rows="10" cols="100" class="form-control"
-                                  placeholder="Message" id="message" required
-                                  data-validation-required-message="Please enter your message" minlength="5"
-                                  data-validation-minlength-message="Min 5 characters"
-                                  maxlength="999" style="resize:none"></textarea>
-              </div>
-            </div>
-            <div id="success"> </div> <!-- For success/fail messages -->
-            <button type="submit" class="btn btn-primary pull-right">Send</button><br />
-          </form>
+        <div class="col-md-1"></div>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"><img src="images/technique/python.png" alt="" /></i>
+          <h3>Python</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus.</p>-->
         </div>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"> <img src="images/technique/datamining.png" alt="" /></i>
+          <h3>NLTK Toolkit</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet congue.</p>-->
+        </div>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"> <img src="images/technique/couchDB.png" alt="" /></i>
+          <h3>CouchDB</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer ultricies sed elit impe.</p>-->
+        </div>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"> <img src="images/technique/restful.png" alt="" /></i>
+          <h3>RESTful</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>-->
+        </div>
+        <div class="col-md-2 col-sm-3 col-xs-4 text-center">
+          <i class="circle"> <img src="images/technique/aurin1.png" alt="" /></i>
+          <h3>AURIN</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>-->
+        </div>
+        <div class="col-md-1"></div>
+
+      </div>
+      <br/>
+      <h3 style="text-align: center; padding-bottom: 15px">Front-End Web Application</h3>
+      <div class="row">
+        <!-- item -->
+        <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+          <i class="circle"><img src="images/technique/html5.png" alt="" /></i>
+          <h3>HTML5</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus.</p>-->
+        </div>
+        <!-- end: -->
+
+        <!-- item -->
+        <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+          <i class="circle"> <img src="images/technique/css3.png" alt="" /></i>
+          <h3>CSS3</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet congue.</p>-->
+        </div>
+        <!-- end: -->
+
+        <!-- item -->
+        <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+          <i class="circle"> <img src="images/technique/javascript.png" alt="" /></i>
+          <h3>JavaScript</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer ultricies sed elit impe.</p>-->
+        </div>
+        <!-- end: -->
+
+        <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+          <i class="circle"> <img src="images/technique/bootstrap.png" alt="" /></i>
+          <h3>Bootstrap</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>-->
+        </div>
+
+        <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+          <i class="circle"> <img src="images/technique/jquery.png" alt="" /></i>
+          <h3>jQuery</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>-->
+        </div>
+
+        <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+          <i class="circle"> <img src="images/technique/ajax.png" alt="" /></i>
+          <h3>AJAX</h3>
+          <!--<p>Nullam ac rhoncus sapien, non gravida purus. Alinon elit imperdiet congue. Integer elit imperdiet conempus.</p>-->
+        </div>
+        <!-- end:-->
       </div>
     </div>
     <!--/.container-->
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3">
-        <div class="col">
-          <h4>Contact us</h4>
-          <ul>
-            <li>1th Avenue, New York - United States</li>
-            <li>Phone: +22 342 2345 345 | Fax: +22 724 2342 343 </li>
-            <li>Email: <a href="mailto:info@example.com" title="Email Us">info@example.com</a></li>
-            <li>Skype: <a href="skype:my.test?call" title="Skype us">my-company</a></li>
-          </ul>
-        </div>
+  <footer>
+    <div class="container">
+      <div class="social text-center">
+        <a href="https://github.com/Le0nHardt/Cloud-Project"><i class="fa fa-github"></i></a>
+        <a href="https://github.com/Le0nHardt/Cloud-Project" target="_blank" style="font-size: 30px">See source code on Github!</a>
       </div>
-
-      <div class="col-md-3">
-        <div class="col">
-          <h4>Mailing list</h4>
-          <p>Lorem ipsum dolor sit amet, ea eum labitur scsstie percipitoleat.</p>
-          <form class="form-inline">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Your email address...">
-                                <span class="input-group-btn">
-                                    <button class="btn" type="button">Go!</button>
-                                </span>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="col col-social-icons">
-          <h4>Follow us</h4>
-          <a href="#"><i class="fa fa-facebook"></i></a>
-          <a href="#"><i class="fa fa-google-plus"></i></a>
-          <a href="#"><i class="fa fa-youtube-play"></i></a>
-          <a href="#"><i class="fa fa-flickr"></i></a>
-          <a href="#"><i class="fa fa-linkedin"></i></a>
-          <a href="#"><i class="fa fa-twitter"></i></a>
-          <a href="#"><i class="fa fa-skype"></i></a>
-          <a href="#"><i class="fa fa-pinterest"></i></a>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="col">
-          <h4>Latest News</h4>
-          <p>
-            Lorem ipsum dolor labitur scsstie per sit amet, ea eum labitur scsstie percipitoleat.
-            <br><br>
-            <a href="#" class="btn">Get Mores!</a>
-          </p>
-        </div>
-      </div>
+      <div class="clear"></div>
+      <!--CLEAR FLOATS-->
     </div>
+  </footer>
 
-  </div>
-
-</footer>
-<!--/.page-section-->
-<section class="copyright">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-12 text-center">Copyright &copy; 2016.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></div>
-    </div>
-    <!-- / .row -->
-  </div>
-</section>
-<a href="#top" class="topHome"><i class="fa fa-chevron-up fa-2x"></i></a>
+    <!--/.page-section-->
+  <section class="copyright">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 text-center">Copyright &copy; 2016. Group 17.</div>
+        </div>
+        <!-- / .row -->
+      </div>
+    </section>
+    <a href="#top" class="topHome"><i class="fa fa-chevron-up fa-2x"></i></a>
 
 
 
-<!--[if lte IE 8]><script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script><![endif]-->
-<script src="js/modernizr-latest.js"></script>
-<script src="js/jquery-1.8.2.min.js" type="text/javascript"></script>
-<script src="js/bootstrap.min.js" type="text/javascript"></script>
-<script src="js/jquery.isotope.min.js" type="text/javascript"></script>
-<script src="js/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
-<script src="js/jquery.nav.js" type="text/javascript"></script>
-<script src="js/jquery.fittext.js"></script>
-<script src="js/waypoints.js"></script>
+  <script src="js/modernizr-latest.js"></script>
+  <script src="js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="js/jquery.isotope.min.js" type="text/javascript"></script>
+  <script src="js/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+  <script src="js/jquery.nav.js" type="text/javascript"></script>
+  <script src="js/jquery.fittext.js"></script>
+  <script src="js/waypoints.js"></script>
 
-<!--<script src="contact/jqBootstrapValidation.js"></script>-->
-<!--<script src="contact/contact_me.js"></script>-->
+    <!--<script src="contact/jqBootstrapValidation.js"></script>-->
+    <!--<script src="contact/contact_me.js"></script>-->
 
-<script src="js/custom.js" type="text/javascript"></script>
-<script src="js/owl-carousel/owl.carousel.js"></script>
+  <script src="js/custom.js" type="text/javascript"></script>
+  <script src="js/owl-carousel/owl.carousel.js"></script>
+
+  <script type="text/javascript" src="canvasjs.min.js"></script></head>
 
 
-</body>
+
+    </body>
 
 
 </html>

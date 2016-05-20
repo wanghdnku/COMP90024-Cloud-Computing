@@ -2,323 +2,171 @@
 <html>
 
 <head>
-  <link rel="stylesheet" type="text/css" href="external/bootstrap.min.css" />
-    <script type="text/javascript">
-        window.onload = function () {
-            var chart = new CanvasJS.Chart("barChartContainer",
-                    {
-                        title:{
-                            text: "Division of products Sold in Quarter."
-                        },
-                        axisY:{
-                            title: "percent"
-                        },
-                        animationEnabled: true,
-                        toolTip:{
-                            shared: true,
-                            content: "{name}: {y} - <strong>#percent%</strong>"
-                        },
-                        data:[
-                            {
-                                type: "stackedBar100",
-                                showInLegend: true,
-                                name: "Relevant",
-                                dataPoints: [
-                                    {y: 291573, label: "Melbourne" },
-                                    {y: 231144, label: "Sydney" },
-                                    {y: 107194, label: "Adelaide" },
-                                    {y: 130493, label: "Brisbane" }
-                                ]
-                            },
-                            {
-                                type: "stackedBar100",
-                                showInLegend: true,
-                                name: "Irrelevant",
-                                dataPoints: [
-                                    {y: 468427, label: "Melbourne" },
-                                    {y: 527132, label: "Sydney" },
-                                    {y: 195533, label: "Adelaide" },
-                                    {y: 247475, label: "Brisbane" }
-                                ]
-                            }
-                        ]
-                    });
-            chart.render();
+  <title>Basic HTML5 Column Chart </title>
 
+  <link rel="stylesheet" href="css/jquery-ui.css">
+  <script src="js/jquery-1.12.3.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
 
-            var mountainChart = new CanvasJS.Chart("mountainChartContainer",
-                    {
-                        title:{
-                            text: "Multi-Series Spline Area Chart"
-                        },
-                        animationEnabled: true,
-                        data: [
-                            {
-                                type: "splineArea",
-                                color: "rgba(255,0,0,.7)",
+  <!--画图表-->
+  <script type="text/javascript">
+    window.onload = function () {
 
-                                dataPoints: [
-                                    {y: 131975},
-                                    {y: 155439},
-                                    {y: 189155},
-                                    {y: 169031},
-                                    {y: 179203},
-                                    {y: 170484},
-                                    {y: 137827},
-                                    {y: 83063},
-                                    {y: 61203}
-                                ]
-                            },
-                          {
-                            type: "splineArea",
-                            color: "rgba(0,255,0,.7)",
+    }
+  </script>
+  <!--根据选项调整UI-->
+  <script>
+    $(function() {
+      var circle = $( "#circle" );
+      var a1 = 50;
+      var a2 = 50;
+      var a3 = 50;
+      var a4 = 50;
 
-                            dataPoints: [
-                              {y: 296818},
-                              {y: 281906},
-                              {y: 352865},
-                              {y: 323124},
-                              {y: 307181},
-                              {y: 258945},
-                              {y: 193392},
-                              {y: 102211},
-                              {y: 65037}
-                            ]
-                          },
-                          {
-                            type: "splineArea",
-                            color: "rgba(0,0,255,.5)",
+      var b1 = 70;
+      var b2 = 70;
+      var b3 = 70;
+      var b4 = 70;
 
-                            dataPoints: [
-                              {y: 395013},
-                              {y: 364667},
-                              {y: 545781},
-                              {y: 507816},
-                              {y: 451936},
-                              {y: 383863},
-                              {y: 288307},
-                              {y: 172353},
-                              {y: 115806}
-                            ]
-                          },
-                          {
-                            type: "splineArea",
-                            color: "rgba(123,123,123,.5)",
+      var twitterData = "Twitter Data";
+      var aurinData = "AURIN Data";
 
-                            dataPoints: [
-                              {y: 579587},
-                              {y: 525467},
-                              {y: 696791},
-                              {y: 694766},
-                              {y: 620981},
-                              {y: 542461},
-                              {y: 401816},
-                              {y: 229435},
-                              {y: 156621}
-                            ]
-                          }
-//                            {
-//                                type: "splineArea",
-//                                color: "rgba(194,70,66,.7)",
-//                                dataPoints: [
-//                                    {y: 14},
-//                                    {y: 23},
-//                                    {y: 21},
-//                                    {y: 16},
-//                                    {y: 12},
-//                                    {y: 14},
-//                                    {y: 18},
-//                                    {y: 14},
-//                                    {y: 11},
-//                                    {y: 12},
-//                                    {y: 17},
-//                                    {y: 14}
-//                                ]
-//                            }
+      $( "#twitter" ).selectmenu({
+        change: function( event, data ) {
 
-                        ]
-                    });
+          if (data.item.value == "Positive") {
+            a1 = 6.72; a2 = 6.74; a3 = 6.28; a4 = 4.86;
+            twitterData = "Positive Attitude";
+          } else if (data.item.value == "Negative") {
+            a1 = 1.85; a2 = 1.89; a3 = 1.85; a4 = 1.54;
+            twitterData = "Negative Attitude";
+          } else if (data.item.value == "Politics") {
+            a1 = 35.41; a2 = 34.52; a3 = 38.36; a4 = 30.48;
+            twitterData = "Politics Relevance";
+          } else {
+            a1 = 64.59; a2 = 65.48; a3 = 61.64; a4 = 69.52;
+            twitterData = "Politics Irrelevance";
+          }
 
-            mountainChart.render();
-
-            var pieChart1 = new CanvasJS.Chart("pieChartContainer",
-                    {
-                      theme:"theme2",
-                      title:{
-                        text: "Melbourne"
-                      },
-                      animationEnabled: true,
-                      legend:{
-                        verticalAlign: "bottom",
-                        horizontalAlign: "center"
-                      },
-                      data: [
-                        {
-                          indexLabelFontSize: 20,
-                          indexLabelFontFamily: "Monospace",
-                          indexLabelFontColor: "darkgrey",
-                          indexLabelLineColor: "darkgrey",
-                          indexLabelPlacement: "outside",
-                          type: "pie",
-                          showInLegend: true,
-                          toolTipContent: "{y} - <strong>#percent%</strong>",
-                          dataPoints: [
-                            {  y: 47694, legendText:"Positive", exploded: true },
-                            {  y: 14108, legendText:"Negative", exploded: true },
-                            {  y: 698198, legendText:"Neutral", exploded: true }
-                          ]
-                        }
-                      ]
-                    });
-
-            pieChart1.render();
-
-          var pieChart2 = new CanvasJS.Chart("pieChartContainer2",
-              {
-                theme:"theme2",
-                title:{
-                  text: "Sydney"
-                },
-                animationEnabled: true,
-                legend:{
-                  verticalAlign: "bottom",
-                  horizontalAlign: "center"
-                },
-                data: [
-                  {
-                    indexLabelFontSize: 20,
-                    indexLabelFontFamily: "Monospace",
-                    indexLabelFontColor: "darkgrey",
-                    indexLabelLineColor: "darkgrey",
-                    indexLabelPlacement: "outside",
-                    type: "pie",
-                    showInLegend: true,
-                    toolTipContent: "{y} - <strong>#percent%</strong>",
-                    dataPoints: [
-                      {  y: 36823, legendText:"Positive", exploded: true },
-                      {  y: 11702, legendText:"Negative", exploded: true },
-                      {  y: 709751, legendText:"Neutral", exploded: true }
-                    ]
-                  }
-                ]
-              });
-
-          pieChart2.render();
-
-          var pieChart3 = new CanvasJS.Chart("pieChartContainer3",
-              {
-                theme:"theme2",
-                title:{
-                  text: "Adelaide"
-                },
-                animationEnabled: true,
-                legend:{
-                  verticalAlign: "bottom",
-                  horizontalAlign: "center"
-                },
-                data: [
-                  {
-                    indexLabelFontSize: 20,
-                    indexLabelFontFamily: "Monospace",
-                    indexLabelFontColor: "darkgrey",
-                    indexLabelLineColor: "darkgrey",
-                    indexLabelPlacement: "outside",
-                    type: "pie",
-                    showInLegend: true,
-                    toolTipContent: "{y} - <strong>#percent%</strong>",
-                    dataPoints: [
-                      {  y: 20358, legendText:"Positive", exploded: true },
-                      {  y: 5615, legendText:"Negative", exploded: true },
-                      {  y: 276754, legendText:"Neutral", exploded: true }
-                    ]
-                  }
-                ]
-              });
-
-          pieChart3.render();
-
-          var pieChart4 = new CanvasJS.Chart("pieChartContainer4",
-              {
-                theme:"theme2",
-                title:{
-                  text: "Brisbane"
-                },
-                animationEnabled: true,
-                legend:{
-                  verticalAlign: "bottom",
-                  horizontalAlign: "center"
-                },
-                data: [
-                  {
-                    indexLabelFontSize: 20,
-                    indexLabelFontFamily: "Monospace",
-                    indexLabelFontColor: "darkgrey",
-                    indexLabelLineColor: "darkgrey",
-                    indexLabelPlacement: "outside",
-                    type: "pie",
-                    showInLegend: true,
-                    toolTipContent: "{y} - <strong>#percent%</strong>",
-                    dataPoints: [
-                      {  y: 25457, legendText:"Positive", exploded: true },
-                      {  y: 7134, legendText:"Negative", exploded: true },
-                      {  y: 345377, legendText:"Neutral", exploded: true }
-                    ]
-                  }
-                ]
-              });
-
-          pieChart4.render();
 
         }
-    </script>
+      });
+
+      $( "#aurin" ).selectmenu({
+        change: function( event, data ) {
+          if (data.item.value == "Employment") {
+            b1 = 56.32; b2 = 62.63; b3 = 61.19; b4 = 61.29;
+            aurinData = "Employment Rate";
+          } else if (data.item.value == "Unemployment") {
+            b1 = 5.66; b2 = 5.68; b3 = 5.48; b4 = 5.87;
+            aurinData = "Unemployment Rate";
+          } else {
+            b1 = 39.75; b2 = 36.52; b3 = 37.77; b4 = 37.53;
+            aurinData = "Average Age";
+          }
+
+          var chart = new CanvasJS.Chart("chartContainer",
+              {
+                animationEnabled: true,
+                axisY: {
+                  title: "percentage"
+                },
+                legend: {
+                  verticalAlign: "bottom",
+                  horizontalAlign: "center"
+                },
+                theme: "theme2",
+                data: [
+
+                  {
+                    type: "column",
+                    showInLegend: true,
+                    legendMarkerColor: "rgba(61,106,176,1)",
+                    legendText: twitterData,
+                    dataPoints: [
+                      {y: a1, label: "Adelaide"},
+                      {y: a2,  label: "Brisbane" },
+                      {y: a3,  label: "Melbourne"},
+                      {y: a4,  label: "Sydney"}
+                    ]
+                  },
+                  {
+                    type: "line",
+                    showInLegend: true,
+                    lineThickness: 2,
+                    name: aurinData,
+                    markerType: "square",
+                    color: "#F08080",
+                    dataPoints: [
+                      { label: "Adelaide", y: b1 },
+                      { label: "Brisbane", y: b2 },
+                      { label: "Melbourne", y: b3 },
+                      { label: "Sydney", y: b4 }
+                    ]
+                  }
+                ]
+              });
+
+          chart.render();
 
 
+        }
+      });
+    });
+  </script>
 
+  <script type="text/javascript" src="canvasjs.min.js"></script>
+  <style>
+    fieldset {
+      border: 0;
+      margin-left: 50px;
+    }
+    label {
+      display: block;
+      margin: 20px 0 0 0;
+    }
+    select {
+      width: 300px;
+    }
 
-    <script type="text/javascript" src="canvasjs.min.js"></script></head>
-<!--<body>-->
+    #circle {
+      float: left;
+      background: yellow;
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+    }
+  </style>
+
+</head>
 <body>
 
-<div id="barChartContainer" style="height: 200px; width: 60%; margin: auto"></div>
+<div class="demo">
 
-<div id="mountainChartContainer" style="height: 300px; width: 80%; margin: auto"></div>
+  <form action="#">
 
+    <fieldset>
+      <label for="twitter">Twitter Data</label>
+      <select name="twitter" id="twitter">
+        <option value="Positive" selected="selected">Positive Attitude</option>
+        <option value="Negative">Negative Attitude</option>
+        <option value="Politics">Politics Relevance</option>
+        <option value="NoPolitics">Politics Irrelevance</option>
+      </select>
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="col-md-3 col-sm-3 col-xs-6">
-      <div id="pieChartContainer" style="height: 100%; width: 100%;"></div>
-    </div>
-    <div class="col-md-3 col-sm-3 col-xs-6">
-      <div id="pieChartContainer2" style="height: 100%; width: 100%;"></div>
-    </div>
-    <div class="col-md-3 col-sm-3 col-xs-6">
-      <div id="pieChartContainer3" style="height: 100%; width: 100%;"></div>
-    </div>
-    <div class="col-md-3 col-sm-3 col-xs-6">
-      <div id="pieChartContainer4" style="height: 100%; width: 100%;"></div>
-    </div>
-  </div>
+      <label for="aurin">AURIN Data</label>
+      <select name="aurin" id="aurin">
+        <option value="Employment">Employment Rate</option>
+        <option value="Unemployment">Unemployment Rate</option>
+        <option value="Age" selected="selected">Average Age</option>
+      </select>
+    </fieldset>
+
+  </form>
+
 </div>
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="col-md-3 col-sm-3 col-xs-6">
-      <div id="popChartContainer" style="height: 100%; width: 100%;"></div>
-    </div>
-    <div class="col-md-3 col-sm-3 col-xs-6">
-      <div id="popChartContainer2" style="height: 100%; width: 100%;"></div>
-    </div>
-    <div class="col-md-3 col-sm-3 col-xs-6">
-      <div id="popChartContainer3" style="height: 100%; width: 100%;"></div>
-    </div>
-    <div class="col-md-3 col-sm-3 col-xs-6">
-      <div id="popChartContainer4" style="height: 100%; width: 100%;"></div>
-    </div>
-  </div>
+<div id="chartContainer" style="height: 300px; width: 100%;">
 </div>
-
-
 </body>
-
 </html>

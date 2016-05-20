@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	
+	<title>Chakra - Responsive One Page Template</title>
+	
+<style>
+body { margin: 0; padding: 0; overflow: hidden; height: 100%; width: 100%; }
+.wrapper { height: 100%; width: 100%; position: absolute;}
+.dark-img { display: block; width: 50%; height: 100%; background: #26292E; float: left; text-align: right; }
+.light-img { display: block; width: 50%; height: 100%; background: #FFFFFF; float: right; }
+.dark-img img {	position: relative; top: 50%; right: 50%; margin-top: -175px; margin-right: -300px; max-width: 100%; max-height: 100%; -webkit-transition: all .3s ease; -moz-transition: all .3s ease; -ms-transition: all .3s ease; -o-transition: all .3s ease; transition: all .3s ease; }
+.light-img img { position: relative; top: 50%; left: 50%; margin-top: -175px; margin-left: -300px; max-width: 100%; max-height: 100%; -webkit-transition: all .3s ease; -moz-transition: all .3s ease; -ms-transition: all .3s ease; -o-transition: all .3s ease; transition: all .3s ease; }
+a:hover img { top: 45%; }
+img { border: 0; }
+
+@media (min-width: 980px) and (max-width: 1300px) {
+	.dark-img img, .light-img img  { margin: 0; top: 30%; }
+	.dark-img img {
+		right: 1%;
+	}
+	
+	.light-img img {
+		left: 1%;
+	}
+	a:hover img { top: 25%; }
+}
+
+@media (max-width: 979px) {
+	.dark-img img, .light-img img  { margin: 0; top: 30%; }
+	.dark-img img {
+		right: 1%;
+	}
+	
+	.light-img img {
+		left: 1%;
+	}
+	a:hover img { top: 25%; }
+}
+
+@media (max-width: 767px) {
+	.dark-img img, .light-img img  { margin: 0; top: 35%; }
+	
+	.dark-img img {
+		right: 1%;
+	}
+	
+	.light-img img {
+		left: 1%;
+	}
+	a:hover img { top: 35%; }
+}
+
+@media (max-width: 479px) {
+	.dark-img img, .light-img img  { margin: 0; top: 35%; }
+	
+	.dark-img img {
+		right: 1%;
+	}
+	
+	.light-img img {
+		left: 1%;
+	}
+	
+	a:hover img { top: 35%; }
+}
+</style>
+
+<!-- Analytics -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-4910263-10']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
+
+<body>
+	<div class="wrapper">
+		<a href="dark/index.html" target="_blank" class="dark-img"><img src="dark.jpg" alt="" /></a>
+		<a href="light/index.html" target="_blank" class="light-img"><img src="light.jpg" alt="" /></a>
+	</div>
+</body>
+
+</html>

@@ -1,5 +1,5 @@
-@import url(http://fonts.useso.com/css?family=Open+Sans:400,700,600);
-@import url(http://fonts.useso.com/css?family=Oswald:400,700);
+/*@import url(http://fonts.useso.com/css?family=Open+Sans:400,700,600);*/
+/*@import url(http://fonts.useso.com/css?family=Oswald:400,700);*/
 * {
 	margin: 0;
 	padding: 0;
@@ -90,17 +90,17 @@ text-align: center;
 line-height: 41px;
 /* border-radius: 10px; */
 }
-#services img{
+#techniques img{
 	width:58px;
 }
-#services .circle{
+#techniques .circle{
 width:120px;
 height:90px;
 display:inline-block;
 background: transparent;
 border:1px solid #fff;
 }
-#services .circle:hover {
+#techniques .circle:hover {
 	background:#FFF;	
 	transition: all 0.2s linear 0s;
 	-webkit-transition: all 0.2s linear 0s;
@@ -670,8 +670,8 @@ img, video, iframe, embed, object {
 }
 .team-socials {
 	position:absolute;
-	/*top: 43%;*/
 	bottom:115px;
+	/*bottom:70px;*/
 	left:0px;
 	right:0px;
 }
@@ -970,7 +970,7 @@ footer input.form-control{
 .area1 a{
 	margin-bottom:10px;
 }
-#services{
+#techniques {
 padding:35px 0;
 }
 @media (min-width: 768px) {
